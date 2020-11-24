@@ -1,0 +1,135 @@
+<?php
+if (empty($_GET['id'])) {
+   header("Location: " . $wo['config']['site_url']);
+   exit();
+}
+$page = Wo_GetSuccessStory($_GET['id']);
+if (empty($page)) {
+   header("Location: " . $wo['config']['site_url']);
+   exit();
+}
+$udata = userData($page['user_id']);
+$xudata = userData($page['story_user_id']);
+?>
+<script src="<?php echo Wo_LoadAdminLink('plugins/tinymce/js/tinymce/tinymce.min.js'); ?>"></script>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Manage success stories > Edit <?php echo $udata->full_name;?> Success story</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-8 col-md-8">
+            <div class="card">
+                <div class="body">
+                    <div class="alert alert-success add-settings-alert"></div>
+                    <form class="add-settings" method="POST">
+
+                        <div class="form-group form-float">
+                            <a href="<?php echo $wo['site_url'] . '/@' . $udata->username ; ?>" target="_blank" >
+                                <img src="<?php echo $udata->avater->avater; ?>" class="setting-avatar" alt="<?php echo $udata->full_name?> Profile Picture">
+                                <?php echo $udata->full_name;?>
+                            </a>
+                            &nbsp;&nbsp;&nbsp;
+                            With
+                            &nbsp;&nbsp;&nbsp;
+                            <a href="<?php echo $wo['site_url'] . '/@' . $xudata->username ; ?>" target="_blank" >
+                                <img src="<?php echo $xudata->avater->avater; ?>" class="setting-avatar" alt="<?php echo $xudata->full_name?> Profile Picture">
+                                <?php echo $xudata->full_name;?>
+                            </a>
+<!---->
+<!--                            <span style="color:#607D8B;font-size: 11px;font-weight: bold;" class=" ajax-time" title="--><?php //echo date('c', $page['created_at']); ?><!--">-->
+<!--                                --><?php //echo Time_Elapsed_String($page['created_at']);?>
+<!--                            </span>-->
+
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <label class="form-label">Story date : <?php echo $page['story_date'];?></label>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="quote" name="quote" class="form-control" value="<?php echo $page['quote'];?>">
+                                <label class="form-label">Quote</label>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="form-group form-float">
+                            <div class="form-line"><div class="clearfix"></div>
+                                <br>
+                                <textarea name="content" id="content" class="form-control" cols="30" rows="5"><?php echo $page['description'];?></textarea>
+                                <label class="form-label">Content (HTML allowed)</small></label>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <input type="hidden" name="id" value="<?php echo $page['id'];?>">
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Update</button>
+                        <a class="btn btn-info m-t-15  waves-light" href="<?php echo Wo_LoadAdminLinkSettings('manage-success-stories'); ?>">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+    <script>
+
+        $(function() {
+
+            tinymce.init({
+                selector: '#content',
+                height: 270,
+                entity_encoding : "raw",
+                paste_data_images: true,
+                image_advtab: true,
+                toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                toolbar2: "print preview media | forecolor backcolor",
+                plugins: [
+                    "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime media nonbreaking save table contextmenu directionality",
+                    "template paste textcolor colorpicker textpattern"
+                ],
+            });
+
+
+            var form_add_settings = $('form.add-settings');
+            form_add_settings.ajaxForm({
+                url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=edit_new_success_story&p=manage-success-stories',
+                beforeSend: function() {
+                    form_add_settings.find('.waves-effect').text('Please wait..');
+                },
+                beforeSubmit : function(arr, $form, options){
+                    //arr.splice(0, 1);
+                    tinymce.get("content").setContent(tinymce.activeEditor.getContent());
+                    document.getElementById("content").value=tinymce.activeEditor.getContent();
+                    arr.push({name:'content', value:btoa(unescape(encodeURIComponent($('#content').val())))})
+                },
+                success: function(data) {
+                    if (data.status == 200) {
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                        $('.add-settings-alert').html('<i class="fa fa-check"></i> Success story edit successfully');
+                        setTimeout(function () {
+                            window.location.href = '<?php echo Wo_LoadAdminLinkSettings('manage-success-stories'); ?>';
+                        }, 1000);
+                    } else if (data.status == 400) {
+                        alert(data.message);
+                    }
+                    form_add_settings.find('.waves-effect').text('Create');
+                }
+            });
+        });
+    </script>

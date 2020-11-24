@@ -1,0 +1,172 @@
+<?php
+$page           = (!empty($_GET['page-id']) && is_numeric($_GET['page-id'])) ? Secure($_GET['page-id']) : 1;
+$db->pageLimit  = 20;
+//
+if(isset($_GET['approved'])){
+    $db->where("approved_at", "0", ">")->where('snapshot', '', '!=');
+}else{
+    $db->where("approved_at", "0", "=")->where('snapshot', '', '!=');
+}
+
+$mediafiles = $db->objectbuilder()->orderBy('id', 'DESC')->paginate('users', $page);
+
+//$mediafiles = $db->rawQuery('SELECT * FROM `users` WHERE `status` = 1 AND `snapshot` IS NOT NULL ORDER BY `id` DESC')->paginate('users', $page);
+
+if (($page > $db->totalPages) && !empty($_GET['page-id'])) {
+    header("Location: " . Wo_LoadAdminLinkSettings('manage-user-verification'));
+    exit();
+}
+
+
+$approved_count = $db->where("approved_at", "0", ">")->where('snapshot', '', '!=')->getValue('users','count(id)');
+$disapproved_count =$db->where("approved_at", "0", "=")->where('snapshot', '', '!=')->getValue('users','count(id)');
+
+?>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Users > Manage user verification</h2>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-3">
+            <a href="<?php echo Wo_LoadAdminLinkSettings('manage-user-verification');?>?approved=true">
+            <div class="info-box bg-light-green hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">check</i>
+                </div>
+                <div class="content">
+                    <div class="text">Approved</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo $approved_count; ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 ">
+            <a href="<?php echo Wo_LoadAdminLinkSettings('manage-user-verification');?>">
+            <div class="info-box bg-red hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">clear</i>
+                </div>
+                <div class="content">
+                    <div class="text">Disapproved</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo $disapproved_count; ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Manage user verifications</h2>
+                </div>
+                <div class="clearfix"></div>
+                <div class="table-responsive1">
+                    <table class="table table-bordered table-striped table-hover">
+                        <tbody>
+                        <?php
+                        if( count($mediafiles) === 0 ){
+                            echo '<tr><td style="padding: 200px;text-align: center;">No data available in table</td></tr>';
+                        }else {
+                            foreach ($mediafiles as $mediafilelist) {
+                                $wo['mediafilelist'] = $mediafilelist;
+                                echo Wo_LoadAdminPage('manage-user-verification/list');
+                            }
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="wo-admincp-feturepager" style="width: 98%;margin: 0 auto;">
+                    <div class="pull-left">
+                        <span>
+                          <?php echo "Showing $page out of " . $db->totalPages; ?>
+                        </span>
+                    </div>
+                    <div class="pull-right">
+                        <nav>
+                            <ul class="pagination">
+                                <li>
+                                    <a href="<?php echo Wo_LoadAdminLinkSettings('manage-user-verification?page-id=1'); ?>" class="waves-effect" title='First Page'>
+                                        <i class="material-icons">first_page</i>
+                                    </a>
+                                </li>
+                                <?php if ($page > 1) {  ?>
+                                    <li>
+                                        <a href="<?php echo Wo_LoadAdminLinkSettings('manage-user-verification?page-id=' . ($page - 1)); ?>" class="waves-effect" title='Previous Page'>
+                                            <i class="material-icons">chevron_left</i>
+                                        </a>
+                                    </li>
+                                <?php  } ?>
+
+                                <?php
+                                $nums       = 0;
+                                $nums_pages = ($page > 4) ? ($page - 4) : $page;
+
+                                for ($i=$nums_pages; $i <= $db->totalPages; $i++) {
+                                    if ($nums < 20) {
+                                        ?>
+                                        <li class="<?php echo ($page == $i) ? 'active' : ''; ?>">
+                                            <a href="<?php echo Wo_LoadAdminLinkSettings('manage-user-verification?page-id=' . ($i)); ?>" class="waves-effect">
+                                                <?php echo $i ?>
+                                            </a>
+                                        </li>
+
+                                    <?php } $nums++; }?>
+
+                                <?php if ($db->totalPages > $page) { ?>
+                                    <li>
+                                        <a href="<?php echo Wo_LoadAdminLinkSettings('manage-user-verification?page-id=' . ($page + 1)); ?>" class="waves-effect" title="Next Page">
+                                            <i class="material-icons">chevron_right</i>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                                <li>
+                                    <a href="<?php echo Wo_LoadAdminLinkSettings('manage-user-verification?page-id=' . ($db->totalPages)); ?>" class="waves-effect" title='Last Page'>
+                                        <i class="material-icons">last_page</i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script>
+
+    function Wo_DeleteUser(user_id,photo_file) {
+        if (confirm("Are you sure you want to delete this receipt?") == false) {
+            return false;
+        }
+        hash_id = '<?php echo Wo_CreateSession();?>';
+
+        $.get(Wo_Ajax_Requests_File(),{f:'admin_setting', s:'delete_user', user_id: user_id, p: 'manage-user-verification', receipt_file: photo_file, hash_id: hash_id})
+        .done(function( data ) {
+            $('#ReceiptID_' + user_id).fadeOut(300, function() {
+                window.location = window.location.href ;
+            });
+        });
+    }
+
+    function Wo_ApproveUser(receipt_id,photo_file) {
+        if (confirm("Are you sure you want to approve this user?") == false) {
+            return false;
+        }
+        hash_id = '<?php echo Wo_CreateSession();?>';
+        $('#ReceiptID_' + receipt_id).fadeOut(300, function() {
+            $(this).remove();
+        });
+        $.get(Wo_Ajax_Requests_File(),{f:'admin_setting', s:'approve_user', user_id: receipt_id, receipt_file: photo_file, p: 'manage-user-verification', hash_id: hash_id})
+        .done(function( data ) {
+            window.location = window.location.href + '?approved=true';
+        });
+
+    }
+
+</script>

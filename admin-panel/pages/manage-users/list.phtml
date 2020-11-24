@@ -1,0 +1,37 @@
+<tr class="user-list" id="UserID_<?php echo $wo['userlist']['id']?>" data-user-id="<?php echo $wo['userlist']['id']?>">
+   <td><?php echo $wo['userlist']['id']?></td>
+   <td>
+      <a href="<?php echo $wo['site_url'] . '/@' . $wo['userlist']['username'] ; ?>" target="_blank" >
+      <img src="<?php echo GetMedia($wo['userlist']['avater']); ?>" class="setting-avatar" alt="<?php echo $wo['userlist']['avater']?> Profile Picture">
+      <?php
+        $name = $wo['userlist']['first_name'] . ' ' . $wo['userlist']['last_name'];
+      echo ( $name !== ' ' ? $name : $wo['userlist']['username']); ?>
+      </a>
+   </td>
+   <td><?php echo $wo['userlist']['src']?></td>
+   <td><?php echo $wo['userlist']['email']?></td>
+   <td><?php echo $wo['userlist']['ip_address']?></td>
+   <td><?php echo ($wo['userlist']['active'] == '1') ? '<span class="label label-success">' . __('active') . '</span>': '<span class="label label-danger">' . __('pending') . '</span>';?></td>
+    <?php global $is_admin,$current_user_id; if ($is_admin == true || CheckUserPermission($current_user_id, "manage-users")) {?>
+    <td>
+        <a target="_blank" class="btn btn-info waves-effect btn-lang m-r-10" href="<?php echo $wo['site_url'] . '/settings/' . $wo['userlist']['username'] ; ?>">EDIT</a>
+        <button onclick="Wo_DeleteUser(<?php echo $wo['userlist']['id']?>);" type="button" class="btn btn-danger waves-effect waves-light">DELETE</button>
+
+        <?php if( $is_admin == true ){ ?>
+        <a href="<?php echo Wo_LoadAdminLinkSettings('edit-user-permissions?id=' . $wo['userlist']['id']); ?>" class="btn btn-success waves-effect waves-light">Permissions</a>
+        <?php }?>
+
+        <?php
+            if( $wo['userlist']['src'] !== 'Fake' ){
+                $is_record_exist = $db->where('user_id',$wo['userlist']['id'])->getOne('success_stories','id');
+                if($is_record_exist['id'] > 0) {
+                    echo '<a target="_blank" class="btn btn-warning waves-effect btn-lang m-r-10" href="' . Wo_LoadAdminLinkSettings('edit-success-stories') . '?id=' . $is_record_exist['id'] . '">Edit Success story</a>';
+                }else{
+                   //echo '<a target="_blank" class="btn btn-info waves-effect btn-lang m-r-10" href="' . Wo_LoadAdminLinkSettings('add-success-stories') . '?user=' . $wo['userlist']['id'] . '">Add Success story</a>';
+                }
+
+            }
+        ?>
+    </td>
+    <?php } ?>
+</tr>

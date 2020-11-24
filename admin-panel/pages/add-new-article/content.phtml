@@ -1,0 +1,134 @@
+<script src="<?php echo Wo_LoadAdminLink('plugins/tinymce/js/tinymce/tinymce.min.js'); ?>"></script>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Blogs > Create New article</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-8 col-md-8">
+            <div class="card">
+                <div class="header">
+                    <h2>Create New article</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success add-settings-alert"></div>
+                    <form class="add-settings" method="POST">
+                        <label for="type">Category</label>
+                        <select class="form-control show-tick chosen-select" id="category" name="category">
+                            <?php
+                            $wo['blog_categories'] = Dataset::blog_categories();
+                            foreach ($wo['blog_categories'] as $wo['category_key'] => $wo['category']) {
+                            ?>
+                                <option value="<?php echo $wo['category_key'];?>"><?php echo $wo['category'];?></option>
+                            <?php }?>
+                        </select>
+                        <div class="clearfix"></div>
+                        <br><br>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="title" name="title" class="form-control">
+                                <label class="form-label">Title</label>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="description" name="description" class="form-control">
+                                <label class="form-label">Description</label>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="form-group form-float">
+                            <div class="form-line"><div class="clearfix"></div>
+                                <br>
+                                <textarea name="content" id="content" class="form-control" cols="30" rows="5"></textarea>
+                                <label class="form-label">Content (HTML allowed)</small></label>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="file" id="thumbnail" name="thumbnail" class="form-control">
+                                <label class="form-label">Thumbnail File <small>only: .jpg,.jpeg,.png,.gif allowed</small></label>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="tags" name="tags" class="form-control">
+                                <label class="form-label">Tags</label>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Create</button>
+                        <a class="btn btn-info m-t-15 waves-effect waves-light" href="<?php echo Wo_LoadAdminLinkSettings('manage-success-stories'); ?>">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+    <script>
+
+        $(function() {
+
+            tinymce.init({
+                selector: '#content',
+                height: 270,
+                entity_encoding : "raw",
+                paste_data_images: true,
+                image_advtab: true,
+                toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                toolbar2: "print preview media | forecolor backcolor",
+                plugins: [
+                    "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime media nonbreaking save table contextmenu directionality",
+                    "template paste textcolor colorpicker textpattern"
+                ],
+            });
+
+
+            var form_add_settings = $('form.add-settings');
+            form_add_settings.ajaxForm({
+                url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=add_new_blog_article&p=add-new-article',
+                beforeSend: function() {
+                    form_add_settings.find('.btn-primary').text('Please wait..');
+                },
+                beforeSubmit : function(arr, $form, options){
+                    //arr.splice(0, 1);
+                    tinymce.get("content").setContent(tinymce.activeEditor.getContent());
+                    document.getElementById("content").value=tinymce.activeEditor.getContent();
+                    arr.push({name:'content', value:btoa(unescape(encodeURIComponent($('#content').val())))});
+                    arr.push({name:'category', value:$('#category').val()})
+                },
+                success: function(data) {
+                    if (data.status == 200) {
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                        $('.add-settings-alert').html('<i class="fa fa-check"></i> Blog article added successfully');
+                        setTimeout(function () {
+                            window.location.href = '<?php echo Wo_LoadAdminLinkSettings('manage-articles'); ?>';
+                        }, 1000);
+                    } else if (data.status == 400) {
+                        alert(data.message);
+                    }
+                    form_add_settings.find('.btn-primary').text('Create');
+                }
+            });
+        });
+    </script>

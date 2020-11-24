@@ -1,0 +1,125 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Design > Change Site Design</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h2>Change Site Design</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success d-settings-alert"></div>
+                    <form class="d-settings" method="POST">
+                        <div class="input-group">
+                    	   <span>Favicon</span>
+                           <span class="btn btn-default btn-file">
+		                     <i class="fa fa-camera"></i>
+		                     <input type="file" id="favicon" accept="image/x-png, image/gif, image/jpeg" name="favicon">
+		                   </span>
+		                    <div class="form-group hidden" id="favicon-i">
+					            <input type="text" class="form-control" readonly>
+					        </div>
+                        </div>
+                        <div class="input-group">
+                    	   <span>Logo (366x111)</span>
+                           <span class="btn btn-default btn-file">
+		                     <i class="fa fa-camera"></i>
+		                     <input type="file" id="logo" accept="image/x-png, image/gif, image/jpeg" name="logo">
+		                   </span>
+		                    <div class="form-group hidden" id="logo-i">
+					            <input type="text" class="form-control" readonly>
+					        </div>
+                        </div>
+                        <div class="input-group">
+                            <span>Light Logo </span>
+                            <span class="btn btn-default btn-file">
+		                     <i class="fa fa-camera"></i>
+		                     <input type="file" id="light-logo" accept="image/x-png, image/gif, image/jpeg" name="light-logo">
+		                   </span>
+                            <div class="form-group hidden" id="light-logo-i">
+                                <input type="text" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <label for="night_mode">Design Mode</label>
+                        <div class="form-group">
+                            <input type="radio" name="displaymode" id="night_mode-night" value="night" <?php echo ($wo['config']['displaymode'] == 'night') ? 'checked': '';?>>
+                            <label for="night_mode-night" class="m-l-20">Night</label>
+                            <input type="radio" name="displaymode" id="night_mode-light" value="day" <?php echo ($wo['config']['displaymode'] == 'day') ? 'checked': '';?>>
+                            <label for="night_mode-light" class="m-l-20">Light</label>
+                        </div>
+                        <div>Please make sure to clean your browser cache after changing the design settings.</div>
+
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+$(function() {
+	$('.colorpicker').colorpicker();
+    $("#favicon").change(function () {
+         var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+         var check = filename.split('.').pop();
+         if (check == 'png' || check == 'PNG') {
+         	$("#favicon-i input").val(filename);
+         	$("#favicon-i").removeClass('hidden');
+         } else {
+         	alert('Just PNG format is supported');
+         	$("#favicon-i input").val('');
+         	$("#favicon-i").addClass('hidden');
+         	$('#favicon').val('');
+         }
+    });
+    $("#logo").change(function () {
+         var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+         var check = filename.split('.').pop();
+         if (check == 'png' || check == 'PNG') {
+         	$("#logo-i input").val(filename);
+         	$("#logo-i").removeClass('hidden');
+         } else {
+         	alert('Just PNG format is supported');
+         	$("#logo-i input").val('');
+         	$("#logo-i").addClass('hidden');
+         	$('#logo').val('');
+         }
+    });
+     $("#light-logo").change(function () {
+         var filename = $(this).val().replace(/C:\\fakepath\\/i, '');
+         var check = filename.split('.').pop();
+         if (check == 'png' || check == 'PNG') {
+         	$("#light-logo-i input").val(filename);
+         	$("#light-logo-i").removeClass('hidden');
+         } else {
+         	alert('Just PNG format is supported');
+         	$("#light-logo-i input").val('');
+         	$("#light-logo-i").addClass('hidden');
+         	$('#light-logo').val('');
+         }
+    });
+    var form_d_settings = $('form.d-settings');
+    form_d_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=save-design&p=change-site-desgin',
+        beforeSend: function() {
+            form_d_settings.find('.waves-effect').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.d-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.d-settings-alert').empty();
+                }, 2000);
+            }
+            form_d_settings.find('.waves-effect').text('Save');
+        }
+    });
+});
+</script>

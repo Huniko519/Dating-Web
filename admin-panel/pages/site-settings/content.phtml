@@ -1,0 +1,323 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Settings > Site Settings</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6 float-left">
+            <div class="card">
+                <div class="header">
+                    <h2>Website Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success site-settings-alert"></div>
+                    <form class="site-settings" method="POST">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="default_title" name="default_title" class="form-control" value="<?php echo $wo['config']['default_title']; ?>">
+                                <label class="form-label">Site Title</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="site_name" name="site_name" class="form-control" value="<?php echo $wo['config']['site_name']; ?>">
+                                <label class="form-label">Site Name</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="siteEmail" name="siteEmail" class="form-control" value="<?php echo $wo['config']['siteEmail']; ?>">
+                                <label class="form-label">Site E-mail</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="meta_keywords" name="meta_keywords" class="form-control" value="<?php echo $wo['config']['meta_keywords']; ?>">
+                                <label class="form-label">Site Keywords</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="meta_description" id="meta_description" class="form-control" cols="30" rows="5"><?php echo $wo['config']['meta_description']; ?></textarea>
+                                <label class="form-label">Site Description</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="skey" name="skey" class="form-control" value="<?php global $serverkey; echo $serverkey; ?>">
+                                <label class="form-label">Server Key</label>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 float-right">
+            <div class="card">
+                <div class="header">
+                    <h2>Daily Earning Credit Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success credit_earn_system-settings-alert"></div>
+                    <form class="credit_earn_system-settings" method="POST">
+                        <label for="credit_earn_system">Enable credit earning system.</label>
+                        <div class="form-group">
+                            <input type="radio" name="credit_earn_system" id="credit_earn_system-enabled" value="1" <?php echo ($wo['config']['credit_earn_system'] == 1) ? 'checked': '';?>>
+                            <label for="credit_earn_system-enabled">Enable</label>
+                            <input type="radio" name="credit_earn_system" id="credit_earn_system-disabled" value="0" <?php echo ($wo['config']['credit_earn_system'] == 0) ? 'checked': '';?>>
+                            <label for="credit_earn_system-disabled" class="m-l-20">Disable</label>
+                        </div>
+
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="credit_earn_max_days" name="credit_earn_max_days" class="form-control" value="<?php echo $wo['config']['credit_earn_max_days']; ?>">
+                                <label class="form-label">User must open site daily for</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="credit_earn_day_amount" name="credit_earn_day_amount" class="form-control" value="<?php echo $wo['config']['credit_earn_day_amount']; ?>">
+                                <label class="form-label">To earn for each day</label>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 float-right">
+            <div class="card">
+                <div class="header">
+                    <h2>Other Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success other-settings-alert"></div>
+                    <form class="other-settings" method="POST">
+                        <label for="defualtLang">Default Language</label>
+                        <select class="form-control show-tick" id="default_language" name="default_language">
+                            <?php echo DatasetGetSelect( $wo['config']['default_language'], "language", "Default Language" );?>
+                        </select>
+
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <label for="verification_on_signup">Submit verification docs on sign up</label>
+                        <div class="form-group">
+                            <input type="radio" name="verification_on_signup" id="verification_on_signup-enabled" value="1" <?php echo ($wo['config']['verification_on_signup'] == 1) ? 'checked': '';?>>
+                            <label for="verification_on_signup-enabled">Enable</label>
+                            <input type="radio" name="verification_on_signup" id="verification_on_signup-disabled" value="0" <?php echo ($wo['config']['verification_on_signup'] == 0) ? 'checked': '';?>>
+                            <label for="verification_on_signup-disabled" class="m-l-20">Disable</label>
+                        </div>
+
+
+                        <label for="review_media_files">Review Media files</label>
+                        <div class="form-group">
+                            <input type="radio" name="review_media_files" id="review_media_files-enabled" value="1" <?php echo ($wo['config']['review_media_files'] == 1) ? 'checked': '';?>>
+                            <label for="review_media_files-enabled">Enable</label>
+                            <input type="radio" name="review_media_files" id="review_media_files-disabled" value="0" <?php echo ($wo['config']['review_media_files'] == 0) ? 'checked': '';?>>
+                            <label for="review_media_files-disabled" class="m-l-20">Disable</label>
+                        </div>
+
+                        <label for="show_user_on_homepage">Photo settings</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" name="max_photo_per_user" class="form-control" value="<?php echo $wo['config']['max_photo_per_user']?>">
+                                <label class="form-label">User photo upload Limit</label>
+                                <small style="color: green;">PRO Users, Can upload unlimited photos</small>
+                            </div>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <label for="lock_private_photo">Lock private photos</label>
+                        <div class="form-group">
+                            <input type="radio" name="lock_private_photo" id="lock_private_photo-enabled" value="1" <?php echo ($wo['config']['lock_private_photo'] == 1) ? 'checked': '';?>>
+                            <label for="lock_private_photo-enabled">Enable</label>
+                            <input type="radio" name="lock_private_photo" id="lock_private_photo-disabled" value="0" <?php echo ($wo['config']['lock_private_photo'] == 0) ? 'checked': '';?>>
+                            <label for="lock_private_photo-disabled" class="m-l-20">Disable</label>
+                        </div>
+
+                        <label for="show_user_on_homepage">Unlock Fee</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" name="lock_private_photo_fee" class="form-control" value="<?php echo $wo['config']['lock_private_photo_fee']?>">
+                            </div>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <label for="lock_pro_video">Lock upload video fro pro users</label>
+                        <div class="form-group">
+                            <input type="radio" name="lock_pro_video" id="lock_pro_video-enabled" value="1" <?php echo ($wo['config']['lock_pro_video'] == 1) ? 'checked': '';?>>
+                            <label for="lock_pro_video-enabled">Enable</label>
+                            <input type="radio" name="lock_pro_video" id="lock_pro_video-disabled" value="0" <?php echo ($wo['config']['lock_pro_video'] == 0) ? 'checked': '';?>>
+                            <label for="lock_pro_video-disabled" class="m-l-20">Disable</label>
+                        </div>
+
+                        <label for="show_user_on_homepage">Unlock Fee</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" name="lock_pro_video_fee" class="form-control" value="<?php echo $wo['config']['lock_pro_video_fee']?>">
+                            </div>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <label for="show_user_on_homepage">Show users on homepage</label>
+                        <div class="form-group">
+                            <input type="radio" name="show_user_on_homepage" id="show_user_on_homepage-enabled" value="1" <?php echo ($wo['config']['show_user_on_homepage'] == 1) ? 'checked': '';?>>
+                            <label for="show_user_on_homepage-enabled">Enable</label>
+                            <input type="radio" name="show_user_on_homepage" id="show_user_on_homepage-disabled" value="0" <?php echo ($wo['config']['show_user_on_homepage'] == 0) ? 'checked': '';?>>
+                            <label for="show_user_on_homepage-disabled" class="m-l-20">Disable</label>
+                        </div>
+
+                        <label for="showed_user">Showed users</label>
+                        <select class="form-control show-tick" id="showed_user" name="showed_user">
+                            <option value="" disabled="" selected="">Max Number of user to be displayed</option>
+                            <option value="25" <?php if($wo['config']['showed_user'] == '25'){ ?>selected=""<?php }?>>25</option>
+                            <option value="50" <?php if($wo['config']['showed_user'] == '50'){ ?>selected=""<?php }?>>50</option>
+                            <option value="75" <?php if($wo['config']['showed_user'] == '75'){ ?>selected=""<?php }?>>75</option>
+                            <option value="100" <?php if($wo['config']['showed_user'] == '100'){ ?>selected=""<?php }?>>100</option>
+                            <option value="125" <?php if($wo['config']['showed_user'] == '125'){ ?>selected=""<?php }?>>125</option>
+                            <option value="150" <?php if($wo['config']['showed_user'] == '150'){ ?>selected=""<?php }?>>150</option>
+
+                        </select>
+                        <br>
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <label for="connectivitySystem">Friends System</label>
+                        <div class="form-group">
+                            <input type="radio" name="connectivitySystem" id="connectivitySystem-enabled" value="1" <?php echo ($wo['config']['connectivitySystem'] == 1) ? 'checked': '';?>>
+                            <label for="connectivitySystem-enabled">Enable</label>
+                            <input type="radio" name="connectivitySystem" id="connectivitySystem-disabled" value="0" <?php echo ($wo['config']['connectivitySystem'] == 0) ? 'checked': '';?>>
+                            <label for="connectivitySystem-disabled" class="m-l-20">Disable</label>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" name="connectivitySystemLimit" class="form-control" value="<?php echo $wo['config']['connectivitySystemLimit']?>">
+                                <label class="form-label">Friends System Limit</label>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br>
+                        <label for="default_unit">Default Unit of distance</label>
+                        <select class="form-control show-tick" id="default_unit" name="default_unit">
+                            <option value="" disabled="" selected="">Default Unit</option>
+                            <option value="km" <?php if($wo['config']['default_unit'] == 'km'){ ?>selected=""<?php }?>>KM</option>
+                            <option value="mile" <?php if($wo['config']['default_unit'] == 'mile'){ ?>selected=""<?php }?>>Mile</option>
+                        </select>
+                        <br>
+                        <div class="clearfix"></div>
+                        <br>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="facebook_url" name="facebook_url" class="form-control" value="<?php echo $wo['config']['facebook_url']; ?>">
+                                <label class="form-label">Facebook</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="twitter_url" name="twitter_url" class="form-control" value="<?php echo $wo['config']['twitter_url']; ?>">
+                                <label class="form-label">Twitter</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="google_url" name="google_url" class="form-control" value="<?php echo $wo['config']['google_url']; ?>">
+                                <label class="form-label">Google</label>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="google_tag_code" id="google_tag_code" class="form-control" cols="30" rows="5"><?php echo $wo['config']['google_tag_code']; ?></textarea>
+                                <label class="form-label">Google Tag Code</label>
+                            </div>
+                            <small>You can create account <a href="https://tagmanager.google.com/#/home" target="_blank">here</a>. </small>
+
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+$(function() {
+    var form_site_settings = $('form.credit_earn_system-settings');
+    form_site_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=site-settings',
+        beforeSend: function() {
+            form_site_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_site_settings.find('button').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.credit_earn_system-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.credit_earn_system-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+
+    var form_site_settings = $('form.site-settings');
+    form_site_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=site-settings',
+        beforeSend: function() {
+            form_site_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_site_settings.find('button').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.site-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.site-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_other_settings = $('form.other-settings');
+    form_other_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=site-settings',
+        beforeSend: function() {
+            form_other_settings.find('.waves-effect').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_other_settings.find('.waves-effect').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.other-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.other-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+});
+</script>

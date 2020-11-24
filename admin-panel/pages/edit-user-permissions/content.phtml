@@ -1,0 +1,660 @@
+<?php
+if (empty($_GET['id'])) {
+    header("Location: " . $wo['config']['site_url']);
+    exit();
+}
+$userData = userData($_GET['id']);
+if (empty($userData)) {
+    header("Location: " . $wo['config']['site_url']);
+    exit();
+}
+global $is_admin;
+if( $is_admin === false ){
+    header("Location: " . $wo['config']['site_url']);
+    exit();
+}
+?>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Users > Manage user permissions</h2>
+        <br>
+        <center>
+
+        <form>
+            <span>User level : </span>
+            <button type="button name="permission_type" value="normal" id="btn_permission_normal" class="btn btn-default waves-effect waves-light">Normal</button>
+            <button type="button" name="permission_type" value="moderator" id="btn_permission_moderator" class="btn btn-warning waves-effect waves-light">Moderator</button>
+            <button type="button" name="permission_type" value="admin" id="btn_permission_admin" class="btn btn-info waves-effect waves-light">Admin</button>
+        </form>
+        </center>
+        <br>
+    </div>
+    <div class="row float-left">
+        <div class="col-lg-2 col-md-2 float-left">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 float-left">
+                <div class="card">
+                    <div class="header">
+                        <h2>Settings</h2>
+                    </div>
+                    <div class="body">
+                        <label for="dashboard">Dashboard</label>
+                        <div class="form-group">
+                            <input type="radio" name="dashboard" id="dashboard-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "dashboard", true);?>>
+                            <label for="dashboard-enabled">Enabled</label>
+                            <input type="radio" name="dashboard" id="dashboard-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "dashboard", false);?>>
+                            <label for="dashboard-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="general-settings">General Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="general-settings" id="general-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "general-settings", true);?>>
+                            <label for="general-settings-enabled">Enabled</label>
+                            <input type="radio" name="general-settings" id="general-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "general-settings", false);?>>
+                            <label for="general-settings-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="site-settings">Site Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="site-settings" id="site-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "site-settings", true);?>>
+                            <label for="site-settings-enabled">Enabled</label>
+                            <input type="radio" name="site-settings" id="site-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "site-settings", false);?>>
+                            <label for="site-settings-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="site-features">Manage Site Features</label>
+                        <div class="form-group">
+                            <input type="radio" name="site-features" id="site-features-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "site-features", true);?>>
+                            <label for="site-features-enabled">Enabled</label>
+                            <input type="radio" name="site-features" id="site-features-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "site-features", false);?>>
+                            <label for="site-features-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="email-settings">E-mail & SMS Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="email-settings" id="email-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "email-settings", true);?>>
+                            <label for="email-settings-enabled">Enabled</label>
+                            <input type="radio" name="email-settings" id="email-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "email-settings", false);?>>
+                            <label for="email-settings-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="video-settings">Video & Audio Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="video-settings" id="video-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "video-settings", true);?>>
+                            <label for="video-settings-enabled">Enabled</label>
+                            <input type="radio" name="video-settings" id="video-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "video-settings", false);?>>
+                            <label for="video-settings-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="chat-settings">Chat Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="chat-settings" id="chat-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "chat-settings", true);?>>
+                            <label for="chat-settings-enabled">Enabled</label>
+                            <input type="radio" name="chat-settings" id="chat-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "chat-settings", false);?>>
+                            <label for="chat-settings-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="social-login">Social Login Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="social-login" id="social-login-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "social-login", true);?>>
+                            <label for="social-login-enabled">Enabled</label>
+                            <input type="radio" name="social-login" id="social-login-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "social-login", false);?>>
+                            <label for="social-login-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="payment-settings">Payment System Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="payment-settings" id="payment-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "payment-settings", true);?>>
+                            <label for="payment-settings-enabled">Enabled</label>
+                            <input type="radio" name="payment-settings" id="payment-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "payment-settings", false);?>>
+                            <label for="payment-settings-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="amazon-settings">Storage Settings</label>
+                        <div class="form-group">
+                            <input type="radio" name="amazon-settings" id="amazon-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "amazon-settings", true);?>>
+                            <label for="amazon-settings-enabled">Enabled</label>
+                            <input type="radio" name="amazon-settings" id="amazon-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "amazon-settings", false);?>>
+                            <label for="amazon-settings-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 float-left">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Users</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-users">Manage Users</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-users" id="manage-users-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-users", true);?>>
+                                <label for="manage-users-enabled">Enabled</label>
+                                <input type="radio" name="manage-users" id="manage-users-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-users", false);?>>
+                                <label for="manage-users-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-genders">Manage Genders</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-genders" id="manage-genders-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-genders", true);?>>
+                                <label for="manage-genders-enabled">Enabled</label>
+                                <input type="radio" name="manage-genders" id="manage-genders-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-genders", false);?>>
+                                <label for="manage-genders-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-profile-fields">Manage Custom Profile Fields</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-profile-fields" id="manage-profile-fields-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-profile-fields", true);?>>
+                                <label for="manage-profile-fields-enabled">Enabled</label>
+                                <input type="radio" name="manage-profile-fields" id="manage-profile-fields-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-profile-fields", false);?>>
+                                <label for="manage-profile-fields-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-success-stories">Manage success stories</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-success-stories" id="manage-success-stories-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-success-stories", true);?>>
+                                <label for="manage-success-stories-enabled">Enabled</label>
+                                <input type="radio" name="manage-success-stories" id="manage-success-stories-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-success-stories", false);?>>
+                                <label for="manage-success-stories-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-user-verification">Manage user verification</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-user-verification" id="manage-user-verification-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-user-verification", true);?>>
+                                <label for="manage-user-verification-enabled">Enabled</label>
+                                <input type="radio" name="manage-user-verification" id="manage-user-verification-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-user-verification", false);?>>
+                                <label for="manage-user-verification-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="affiliates-settings">Affiliates System</label>
+                            <div class="form-group">
+                                <input type="radio" name="affiliates-settings" id="affiliates-settings-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "affiliates-settings", true);?>>
+                                <label for="affiliates-settings-enabled">Enabled</label>
+                                <input type="radio" name="affiliates-settings" id="affiliates-settings-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "affiliates-settings", false);?>>
+                                <label for="affiliates-settings-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="payment-requests">Affiliates - Payment requests</label>
+                            <div class="form-group">
+                                <input type="radio" name="payment-requests" id="payment-requests-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "payment-requests", true);?>>
+                                <label for="payment-requests-enabled">Enabled</label>
+                                <input type="radio" name="payment-requests" id="payment-requests-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "payment-requests", false);?>>
+                                <label for="payment-requests-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="referrals-list">Affiliates - Referrals list</label>
+                            <div class="form-group">
+                                <input type="radio" name="referrals-list" id="referrals-list-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "referrals-list", true);?>>
+                                <label for="referrals-list-enabled">Enabled</label>
+                                <input type="radio" name="referrals-list" id="referrals-list-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "referrals-list", false);?>>
+                                <label for="referrals-list-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>API Settings</h2>
+                        </div>
+                        <div class="body">
+                            <label for="push-notifications-system">Push Notifications Settings</label>
+                            <div class="form-group">
+                                <input type="radio" name="push-notifications-system" id="push-notifications-system-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "push-notifications-system", true);?>>
+                                <label for="push-notifications-system-enabled">Enabled</label>
+                                <input type="radio" name="push-notifications-system" id="push-notifications-system-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "push-notifications-system", false);?>>
+                                <label for="push-notifications-system-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 float-left">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Pages</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-custom-pages">Manage Custom Pages</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-custom-pages" id="manage-custom-pages-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-custom-pages", true);?>>
+                                <label for="manage-custom-pages-enabled">Enabled</label>
+                                <input type="radio" name="manage-custom-pages" id="manage-custom-pages-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-custom-pages", false);?>>
+                                <label for="manage-custom-pages-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="edit-terms-pages">Edit Terms Pages</label>
+                            <div class="form-group">
+                                <input type="radio" name="edit-terms-pages" id="edit-terms-pages-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "edit-terms-pages", true);?>>
+                                <label for="edit-terms-pages-enabled">Enabled</label>
+                                <input type="radio" name="edit-terms-pages" id="edit-terms-pages-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "edit-terms-pages", false);?>>
+                                <label for="edit-terms-pages-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Design</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-themes">Themes</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-themes" id="manage-themes-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-themes", true);?>>
+                                <label for="manage-themes-enabled">Enabled</label>
+                                <input type="radio" name="manage-themes" id="manage-themes-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-themes", false);?>>
+                                <label for="manage-themes-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="change-site-desgin">Change Site Design</label>
+                            <div class="form-group">
+                                <input type="radio" name="change-site-desgin" id="change-site-desgin-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "change-site-desgin", true);?>>
+                                <label for="change-site-desgin-enabled">Enabled</label>
+                                <input type="radio" name="change-site-desgin" id="change-site-desgin-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "change-site-desgin", false);?>>
+                                <label for="change-site-desgin-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Languages</h2>
+                        </div>
+                        <div class="body">
+                            <label for="add-language">Add New Language & Key</label>
+                            <div class="form-group">
+                                <input type="radio" name="add-language" id="add-language-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "add-language", true);?>>
+                                <label for="add-language-enabled">Enabled</label>
+                                <input type="radio" name="add-language" id="add-language-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "add-language", false);?>>
+                                <label for="add-language-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-languages">Manage Languages</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-languages" id="manage-languages-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-languages", true);?>>
+                                <label for="manage-languages-enabled">Enabled</label>
+                                <input type="radio" name="manage-languages" id="manage-languages-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-languages", false);?>>
+                                <label for="manage-languages-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 float-left">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Earnings</h2>
+                        </div>
+                        <div class="body">
+                            <label for="payments">Payments</label>
+                            <div class="form-group">
+                                <input type="radio" name="payments" id="payments-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "payments", true);?>>
+                                <label for="payments-enabled">Enabled</label>
+                                <input type="radio" name="payments" id="payments-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "payments", false);?>>
+                                <label for="payments-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-payments">Manage Payments</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-payments" id="manage-payments-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-payments", true);?>>
+                                <label for="manage-payments-enabled">Enabled</label>
+                                <input type="radio" name="manage-payments" id="manage-payments-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-payments", false);?>>
+                                <label for="manage-payments-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="bank-receipts">Manage bank receipts</label>
+                            <div class="form-group">
+                                <input type="radio" name="bank-receipts" id="bank-receipts-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "bank-receipts", true);?>>
+                                <label for="bank-receipts-enabled">Enabled</label>
+                                <input type="radio" name="bank-receipts" id="bank-receipts-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "bank-receipts", false);?>>
+                                <label for="bank-receipts-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Gifts</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-gifts">Manage Gifts</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-gifts" id="manage-gifts-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-gifts", true);?>>
+                                <label for="manage-gifts-enabled">Enabled</label>
+                                <input type="radio" name="manage-gifts" id="manage-gifts-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-gifts", false);?>>
+                                <label for="manage-gifts-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="add-new-gift">Add New Gift</label>
+                            <div class="form-group">
+                                <input type="radio" name="add-new-gift" id="add-new-gift-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "add-new-gift", true);?>>
+                                <label for="add-new-gift-enabled">Enabled</label>
+                                <input type="radio" name="add-new-gift" id="add-new-gift-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "add-new-gift", false);?>>
+                                <label for="add-new-gift-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Photos</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-photos">Manage Photos</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-photos" id="manage-photos-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-photos", true);?>>
+                                <label for="manage-photos-enabled">Enabled</label>
+                                <input type="radio" name="manage-photos" id="manage-photos-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-photos", false);?>>
+                                <label for="manage-photos-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 float-left">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Stickers</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-stickers">Manage stickers</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-stickers" id="manage-stickers-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-stickers", true);?>>
+                                <label for="manage-stickers-enabled">Enabled</label>
+                                <input type="radio" name="manage-stickers" id="manage-stickers-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-stickers", false);?>>
+                                <label for="manage-stickers-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="add-new-sticker">Add New Sticker</label>
+                            <div class="form-group">
+                                <input type="radio" name="add-new-sticker" id="add-new-sticker-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "add-new-sticker", true);?>>
+                                <label for="add-new-sticker-enabled">Enabled</label>
+                                <input type="radio" name="add-new-sticker" id="add-new-sticker-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "add-new-sticker", false);?>>
+                                <label for="add-new-sticker-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Advertisements</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-website-ads">Manage Website Ads</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-website-ads" id="manage-website-ads-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-website-ads", true);?>>
+                                <label for="manage-website-ads-enabled">Enabled</label>
+                                <input type="radio" name="manage-website-ads" id="manage-website-ads-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-website-ads", false);?>>
+                                <label for="manage-website-ads-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Tools</h2>
+                        </div>
+                        <div class="body">
+                            <label for="fake-users">Fake User Generator</label>
+                            <div class="form-group">
+                                <input type="radio" name="fake-users" id="fake-users-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "fake-users", true);?>>
+                                <label for="fake-users-enabled">Enabled</label>
+                                <input type="radio" name="fake-users" id="fake-users-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "fake-users", false);?>>
+                                <label for="fake-users-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-announcements">Announcements</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-announcements" id="manage-announcements-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-announcements", true);?>>
+                                <label for="manage-announcements-enabled">Enabled</label>
+                                <input type="radio" name="manage-announcements" id="manage-announcements-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-announcements", false);?>>
+                                <label for="manage-announcements-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 float-left">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Blogs</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-articles">Manage articles</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-articles" id="manage-articles-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-articles", true);?>>
+                                <label for="manage-articles-enabled">Enabled</label>
+                                <input type="radio" name="manage-articles" id="manage-articles-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-articles", false);?>>
+                                <label for="manage-articles-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="manage-blog-categories">Manage blog categories</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-blog-categories" id="manage-blog-categories-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-blog-categories", true);?>>
+                                <label for="manage-blog-categories-enabled">Enabled</label>
+                                <input type="radio" name="manage-blog-categories" id="manage-blog-categories-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-blog-categories", false);?>>
+                                <label for="manage-blog-categories-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                            <label for="add-new-article">Create New article</label>
+                            <div class="form-group">
+                                <input type="radio" name="add-new-article" id="add-new-article-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "add-new-article", true);?>>
+                                <label for="add-new-article-enabled">Enabled</label>
+                                <input type="radio" name="add-new-article" id="add-new-article-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "add-new-article", false);?>>
+                                <label for="add-new-article-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 float-left">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Reports</h2>
+                        </div>
+                        <div class="body">
+                            <label for="manage-reports">Manage Reports</label>
+                            <div class="form-group">
+                                <input type="radio" name="manage-reports" id="manage-reports-enabled" value="1" <?php echo CheckRadioPermission($userData->id, "manage-reports", true);?>>
+                                <label for="manage-reports-enabled">Enabled</label>
+                                <input type="radio" name="manage-reports" id="manage-reports-disabled" value="0" <?php echo CheckRadioPermission($userData->id, "manage-reports", false);?>>
+                                <label for="manage-reports-disabled" class="m-l-20">Disabled</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<script>
+    $('input[type="radio"]').click(function(){
+        var permission = $(this).attr('name');
+        var permission_val = $(this).val();
+        var user_id = '<?php echo (int)Secure($userData->id);?>';
+
+        var hash_id = '<?php echo Wo_CreateSession();?>';
+        $.get(Wo_Ajax_Requests_File(), {f: 'admin_setting', s:'update_user_permission_normal', permission:permission, permission_val:permission_val, user_id:user_id, hash_id: hash_id}
+        , function(data, status){
+            $('label[for="'+permission+'"]').append('&nbsp;&nbsp;<span class="alert alert-success" style="padding: 4px;">Saved</span>');
+            setTimeout(function () {
+                $('.alert-success').remove();
+            },1000);
+        });
+    });
+
+    $('#btn_permission_normal').click(function(e){
+        e.preventDefault();
+        $('input[id$="-disabled"]').prop('checked', true);
+        $('input[id$="-enabled"]').prop('checked', false);
+
+        var hash_id = '<?php echo Wo_CreateSession();?>';
+        var user_id = '<?php echo (int)Secure($userData->id);?>';
+        let formData = new FormData();
+            formData.append( 'user_id', user_id );
+            formData.append( 'hash_id', hash_id );
+        $('input[type="radio"]').each(function(){
+            if($(this).is(':checked')) {
+                formData.append('permission[' + $(this).attr('name') + ']', $(this).val());
+            }
+        })
+
+        $.ajax({
+            url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_user_permission_normal',
+            type: "POST",
+            async: false,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout: 60000,
+            dataType: false,
+            success: function (result) {
+                if (result.status == 200) {
+                    console.log(result)
+                }
+            }
+        });
+
+    });
+    $('#btn_permission_moderator').click(function(e){
+        e.preventDefault();
+        $('input[id$="-disabled"]').prop('checked', true);
+        $('input[id$="-enabled"]').prop('checked', false);
+
+        $('#manage-users-disabled').prop('checked', false);
+        $('#manage-users-enabled').prop('checked', true);
+
+        $('#manage-success-stories-disabled').prop('checked', false);
+        $('#manage-success-stories-enabled').prop('checked', true);
+
+        $('#manage-gifts-disabled').prop('checked', false);
+        $('#add-new-gift-enabled').prop('checked', true);
+
+        $('#manage-photos-disabled').prop('checked', false);
+        $('#manage-photos-enabled').prop('checked', true);
+
+        $('#manage-stickers-disabled').prop('checked', false);
+        $('#manage-stickers-enabled').prop('checked', true);
+
+        $('#add-new-sticker-disabled').prop('checked', false);
+        $('#add-new-sticker-enabled').prop('checked', true);
+
+        $('#fake-users-disabled').prop('checked', false);
+        $('#fake-users-enabled').prop('checked', true);
+
+        $('#manage-announcements-disabled').prop('checked', false);
+        $('#manage-announcements-enabled').prop('checked', true);
+
+        $('#manage-articles-disabled').prop('checked', false);
+        $('#manage-articles-enabled').prop('checked', true);
+
+        $('#manage-blog-categories-disabled').prop('checked', false);
+        $('#manage-blog-categories-enabled').prop('checked', true);
+
+        $('#add-new-article-disabled').prop('checked', false);
+        $('#add-new-article-enabled').prop('checked', true);
+
+
+        var hash_id = '<?php echo Wo_CreateSession();?>';
+        var user_id = '<?php echo (int)Secure($userData->id);?>';
+        let formData = new FormData();
+            formData.append( 'user_id', user_id );
+            formData.append( 'hash_id', hash_id );
+        $('input[type="radio"]').each(function(){
+            if($(this).is(':checked')) {
+                formData.append('permission[' + $(this).attr('name') + ']', $(this).val());
+            }
+        })
+
+        $.ajax({
+            url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_user_permission_normal',
+            type: "POST",
+            async: false,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout: 60000,
+            dataType: false,
+            success: function (result) {
+                if (result.status == 200) {
+                    console.log(result)
+                }
+            }
+        });
+    });
+    $('#btn_permission_admin').click(function(e){
+        e.preventDefault();
+        $('input[id$="-disabled"]').prop('checked', false);
+        $('input[id$="-enabled"]').prop('checked', true);
+
+        var hash_id = '<?php echo Wo_CreateSession();?>';
+        var user_id = '<?php echo (int)Secure($userData->id);?>';
+        let formData = new FormData();
+            formData.append( 'user_id', user_id );
+            formData.append( 'hash_id', hash_id );
+        $('input[type="radio"]').each(function(){
+            if($(this).is(':checked')) {
+                formData.append('permission[' + $(this).attr('name') + ']', $(this).val());
+            }
+        })
+
+        $.ajax({
+            url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_user_permission_normal',
+            type: "POST",
+            async: false,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout: 60000,
+            dataType: false,
+            success: function (result) {
+                if (result.status == 200) {
+                    console.log(result)
+                }
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,30 @@
+<tr class="user-list" id="ReceiptID_<?php echo $wo['mediafilelist']->id?>" data-receipt-id="<?php echo $wo['mediafilelist']->id?>" style="width: 25%; float: left;margin-top: 20px;">
+    <td style="border: 0px;text-align: center;display: block;">
+        <a href="<?php echo $wo['site_url'] . '/@' . $wo['mediafilelist']->username; ?>" target="_blank">
+            <img src="<?php echo GetMedia($wo['mediafilelist']->avater);?>" class="setting-avatar" alt="<?php echo $wo['mediafilelist']->username;?> Profile Picture">
+            <?php echo $wo['mediafilelist']->username; ?>
+        </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color:#607D8B;font-size: 11px;font-weight: bold;" class=" ajax-time" title="<?php echo date('c', strtotime($wo['mediafilelist']->created_at)); ?>">
+        <?php echo Time_Elapsed_String(strtotime($wo['mediafilelist']->created_at));?>
+    </span>
+        <hr>
+        <a href="<?php echo GetMedia($wo['mediafilelist']->snapshot); ?>" target="_blank" >
+            <img src="<?php echo GetMedia($wo['mediafilelist']->snapshot); ?>" class="setting-avatar" style="min-width: 197px;object-fit: contain;height: 160px;">
+        </a>
+        <div class="clearfix"></div>
+        <br>
+        <?php if((int)$wo['mediafilelist']->approved_at == 0){?>
+            <div class="row">
+                <div class="col-md-6">
+                    <button  style="float: right;" onclick="Wo_DeleteUser(<?php echo $wo['mediafilelist']->id?>,'<?php echo $wo['mediafilelist']->snapshot?>');" type="button" class="btn btn-danger waves-effect waves-light" style="margin: 0 auto;display: block;">DELETE</button>
+                </div>
+                <div class="col-md-6">
+                    <button style="float: left;" onclick="Wo_ApproveUser(<?php echo $wo['mediafilelist']->id?>,'<?php echo $wo['mediafilelist']->snapshot?>');" type="button" class="btn btn-success waves-effect waves-light" style="margin: 0 auto;display: block;">APPROVE</button>
+                </div>
+            </div>
+        <?php } else{ ?>
+            <b style="color:darkgreen;">Approved <?php echo Time_Elapsed_String($wo['mediafilelist']->approved_at);?></b>
+        <?php }?>
+    </td>
+</tr>

@@ -1,0 +1,210 @@
+<?php
+$send_message      = SendEmail(auth()->email,'Test Message From ' . $wo['config']['siteName'],'If you can see this message, then your SMTP configuration is working fine.');
+if ($send_message === false) {
+?>
+
+<div class="alert alert-danger">
+<i class="fa fa-fw fa-exclamation-circle"></i>
+<strong>Error:</strong> Your email configuration is not set poperly or not working, so the system can not send emails 
+</div>
+
+<br>
+
+    Click <a href="<?php echo Wo_LoadAdminLinkSettings('email-settings'); ?>">E-mail & SMS Settings</a> . to configure and test your email settings
+
+
+<?php
+}else{
+
+    ini_set('max_execution_time', 300000);
+    header('content-type:text/html;charset=utf-8');
+
+    $user_did_not_login_week = GetUserDidNotLoggedIn('week');
+    $user_did_not_login_month = GetUserDidNotLoggedIn('month');
+    $user_did_not_login_3month = GetUserDidNotLoggedIn('month',3);
+    $user_did_not_login_6month = GetUserDidNotLoggedIn('month',6);
+    $user_did_not_login_9month = GetUserDidNotLoggedIn('month',9);
+    $user_did_not_login_year = GetUserDidNotLoggedIn('year');
+
+    global $conn;
+    $error = '';
+    $succuss = '';
+
+    if (isset($_POST['send_to'])) {
+        $_send_to = Secure($_POST['send_to']);
+        $_subject = Secure($_POST['subject']);
+        $_message = Secure($_POST['message']);
+        $_test_message = Secure($_POST['test_message']);
+
+        $sql = '';
+        $users = array();
+        if( $_send_to == 'week'){
+            $users = $user_did_not_login_week;
+        } else if( $_send_to == '1month'){
+            $users = $user_did_not_login_month;
+        } else if( $_send_to == '3month'){
+            $users = $user_did_not_login_3month;
+        } else if( $_send_to == '6month'){
+            $users = $user_did_not_login_6month;
+        } else if( $_send_to == '9month'){
+            $users = $user_did_not_login_9month;
+        } else if( $_send_to == 'year'){
+            $users = $user_did_not_login_year;
+        }
+        $query  = false;
+        $sent = 0;
+        if(!empty($users)){
+
+            echo "<style>.container-fluid{display: none;}
+            .sent{
+                font-size: 11px;
+                font-family: monospace;
+                border: 4px solid #ad098e;
+                padding: 0px 5px;
+                position: fixed;
+                top: 25%;
+                right: 25%;
+                left: 25%;
+                bottom: 25%;
+                margin: 0 auto;
+                vertical-align: middle;
+                opacity: 1;
+                background: #ffffff;
+            }
+            .sent .logo{
+                margin: 0;
+                position: absolute;
+                top: 30%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -30%);
+            }
+            .sent .title{
+                margin: 0;
+                position: absolute;
+                top: 40%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -40%);
+                text-align: left;
+                font-size: 20px;
+                font-family: initial;
+            }
+            .sent .message{
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -50%);
+                text-align: left;
+            }
+        .sent .status{
+                margin: 0;
+                position: absolute;
+                top: 55%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -55%);
+                text-align: left;
+            }
+            </style>";
+
+            if( $_test_message == 'on' ){
+                $u = auth();
+                $sql = "INSERT INTO `emails` (`user_id`, `email_to`, `subject`, `message`) VALUES ('{$u->id}', '{$u->email}', '{$_subject}', '{$_message}')";
+                $sent = 1;
+            }else {
+                $total_user = count($users);
+                foreach ($users as $key => $user) {
+                    while (@ob_end_flush());
+                    if (filter_var($user[ 'email' ], FILTER_VALIDATE_EMAIL)) {
+                        $sql = "INSERT INTO `emails` (`user_id`, `email_to`, `subject`, `message`, `src`) VALUES ('{$user['id']}', '{$user['email']}', '{$_subject}', '{$_message}', 'admin')";
+                        $query  = mysqli_query($conn, $sql);
+                        $sent++;
+                        echo '<div class="sent">
+                                <p class="logo"><img src="'.$wo['config']['theme_url'].'/assets/img/logo.png" width="160" height="35"></p>
+                                <p class="title">Please wait while Queuing messages.</p>
+                                <p class="message">Queue email : ' . $user['email'] . '</p>
+                                <p class="status">'.$sent.' of '.$total_user.' Emails Queued</p>
+                            </div>';
+                    }
+                    flush();
+                    usleep(250000);
+                }
+                $link = Wo_LoadAdminLinkSettings('mock-email') . '?success_msg='.__('Email sent to') . ' ' . $sent . ' ' . __('users');
+                echo "<meta http-equiv=\"refresh\" content=\"0; URL='".$link."'\" />";
+            }
+        }
+        if ($query) {
+            $succuss = '<i class="fa fa-fw fa-check"></i> ' . __('Email sent to') . ' ' . $sent . ' ' . __('users');
+        } else {
+            $error = '<i class="fa fa-fw fa-exclamation-triangle"></i> ' . __('Error while Sending emails');
+        }
+    }
+
+    if(isset($_GET['success_msg'])){
+        $succuss = '<i class="fa fa-fw fa-check"></i> ' . Secure($_GET['success_msg']);
+    }
+
+?>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Tools > Send E-mail</h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="body">
+                    <?php if (!empty($error)) { ?>
+                        <div class="alert alert-danger">
+                            <?php echo $error;?>
+                        </div>
+                    <?php } ?>
+                    <?php if (!empty($succuss)) { ?>
+                        <div class="alert alert-success">
+                            <?php echo $succuss;?>
+                        </div>
+                    <?php } ?>
+                    <form class="mailing-settings" method="POST">
+                        <label for="send_to">Send E-mail To</label>
+                        <select class="form-control show-tick" id="send_to" name="send_to">
+                            <option value="week">» Users who didn't login for a week. —————————— approximately ( <?php echo count($user_did_not_login_week);?> user )</option>
+                            <option value="1month">» Users who didn't login for a month. ————————— &nbsp;approximately ( <?php echo count($user_did_not_login_month);?> user )</option>
+                            <option value="3month">» Users who didn't login for a 3 month. ————————— &nbsp;approximately ( <?php echo count($user_did_not_login_3month);?> user )</option>
+                            <option value="6month">» Users who didn't login for a 6 month. ————————— &nbsp;approximately ( <?php echo count($user_did_not_login_6month);?> user )</option>
+                            <option value="9month">» Users who didn't login for a 9 month. ————————— &nbsp;approximately ( <?php echo count($user_did_not_login_9month);?> user )</option>
+                            <option value="year">» Users who didn't login for a year. ——————————— approximately ( <?php echo count($user_did_not_login_year);?> user )</option>
+                        </select>
+                        <div class="clearfix"></div>
+                        <br><br>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="subject" name="subject" class="form-control">
+                                <label class="form-label">Subject</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="message" id="message" class="form-control" cols="30" rows="10"></textarea>
+                                <label class="form-label">Message (HTML Allowed)</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="checkbox" id="test_message" class="filled-in" name="test_message">
+                            <label for="test_message">Test Message <small>(Send to my email only)</small></label>
+                        </div>
+
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+<?php }?>

@@ -1,0 +1,609 @@
+<?php
+
+$ffmpeg_sys_on = ($wo['config']['ffmpeg_sys'] == '1') ? 'checked' : '';
+$ffmpeg_sys_off = ($wo['config']['ffmpeg_sys'] == '0') ? 'checked' : '';
+
+$disable_phone_field_on = ($wo['config']['disable_phone_field'] == 'on') ? 'checked' : '';
+$disable_phone_field_off = ($wo['config']['disable_phone_field'] == 'off') ? 'checked' : '';
+
+$social_media_links_on = ($wo['config']['social_media_links'] == 'on') ? 'checked' : '';
+$social_media_links_off = ($wo['config']['social_media_links'] == 'off') ? 'checked' : '';
+
+$max_video_duration = $wo['config']['max_video_duration'];
+$ffmpeg_binary = $wo['config']['ffmpeg_binary'];
+?>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Settings > General Settings</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-4 col-md-4 float-left">
+            <div class="card">
+                <div class="header">
+                    <h2>User Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success user-settings-alert"></div>
+                    <form class="user-settings" method="POST">
+                        <label for="maintenance_mode">Maintenance Mode <span class="black" data-toggle="popover" data-trigger="hover" data-content="Turn the whole site under Maintenance. You can get the site back by visiting <?php echo $wo['config']['uri'].'/?access=admin'; ?>"><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="maintenance_mode" id="maintenance_mode-enabled" value="1" <?php echo ($wo['config']['maintenance_mode'] == 1) ? 'checked': '';?>>
+                            <label for="maintenance_mode-enabled">Enabled</label>
+                            <input type="radio" name="maintenance_mode" id="maintenance_mode-disabled" value="0" <?php echo ($wo['config']['maintenance_mode'] == 0) ? 'checked': '';?>>
+                            <label for="maintenance_mode-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="pro_system">Pro system<span class="black" data-toggle="popover" data-trigger="hover" data-content="Allow premium account."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="pro_system" id="pro_system-enabled" value="1" <?php echo ($wo['config']['pro_system'] == '1') ? 'checked': '';?>>
+                            <label for="pro_system-enabled">Enabled</label>
+                            <input type="radio" name="pro_system" id="pro_system-disabled" value="0" <?php echo ($wo['config']['pro_system'] == '0') ? 'checked': '';?>>
+                            <label for="pro_system-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="pro_system">Free Features<span class="black" data-toggle="popover" data-trigger="hover" data-content="Allow all site features for free to all accounts."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="free_features" id="free_features-enabled" value="1" <?php echo ($wo['config']['free_features'] == '1') ? 'checked': '';?>>
+                            <label for="free_features-enabled">Enabled</label>
+                            <input type="radio" name="free_features" id="free_features-disabled" value="0" <?php echo ($wo['config']['free_features'] == '0') ? 'checked': '';?>>
+                            <label for="free_features-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="emailValidation">Account Validation <span class="black" data-toggle="popover" data-trigger="hover" data-content="Send activation link when user has registered"><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="emailValidation" id="emailValidation-enabled" value="1" <?php echo ($wo['config']['emailValidation'] == 1) ? 'checked': '';?>>
+                            <label for="emailValidation-enabled">Enabled</label>
+                            <input type="radio" name="emailValidation" id="emailValidation-disabled" value="0" <?php echo ($wo['config']['emailValidation'] == 0) ? 'checked': '';?>>
+                            <label for="emailValidation-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="sms_or_email">Account Validation System<span class="black" data-toggle="popover" data-trigger="hover" data-content="Choose the validation type, by SMS or E-mail, if you choose SMS, make sure you have configured the SMS configration."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="sms_or_email" id="sms_or_email-enabled" value="sms" <?php echo ($wo['config']['sms_or_email'] == 'sms') ? 'checked': '';?>>
+                            <label for="sms_or_email-enabled">SMS</label>
+                            <input type="radio" name="sms_or_email" id="sms_or_email-disabled" value="mail" <?php echo ($wo['config']['sms_or_email'] == 'mail') ? 'checked': '';?>>
+                            <label for="sms_or_email-disabled" class="m-l-20">E-mail</label>
+                        </div>
+                        <label for="deleteAccount">User Account Deletion <span class="black" data-toggle="popover" data-trigger="hover" data-content="Allow users to delete their account"><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="deleteAccount" id="deleteAccount-enabled" value="1" <?php echo ($wo['config']['deleteAccount'] == 1) ? 'checked': '';?>>
+                            <label for="deleteAccount-enabled">Enabled</label>
+                            <input type="radio" name="deleteAccount" id="deleteAccount-disabled" value="0" <?php echo ($wo['config']['deleteAccount'] == 0) ? 'checked': '';?>>
+                            <label for="deleteAccount-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="pro_system">Show opposite gender<span class="black" data-toggle="popover" data-trigger="hover" data-content="Show opposite gender users in random users."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="opposite_gender" id="opposite_gender-enabled" value="1" <?php echo ($wo['config']['opposite_gender'] == '1') ? 'checked': '';?>>
+                            <label for="opposite_gender-enabled">Enabled</label>
+                            <input type="radio" name="opposite_gender" id="opposite_gender-disabled" value="0" <?php echo ($wo['config']['opposite_gender'] == '0') ? 'checked': '';?>>
+                            <label for="opposite_gender-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="pro_system">Sign up Image verification<span class="black" data-toggle="popover" data-trigger="hover" data-content="Require Image verification when user sign up."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="image_verification" id="image_verification-enabled" value="1" <?php echo ($wo['config']['image_verification'] == '1') ? 'checked': '';?>>
+                            <label for="image_verification-enabled">Enabled</label>
+                            <input type="radio" name="image_verification" id="image_verification-disabled" value="0" <?php echo ($wo['config']['image_verification'] == '0') ? 'checked': '';?>>
+                            <label for="image_verification-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="pro_system">Sign up pending verification<span class="black" data-toggle="popover" data-trigger="hover" data-content="Require admin approve verification to enable user account."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="pending_verification" id="pending_verification-enabled" value="1" <?php echo ($wo['config']['pending_verification'] == '1') ? 'checked': '';?>>
+                            <label for="pending_verification-enabled">Enabled</label>
+                            <input type="radio" name="pending_verification" id="pending_verification-disabled" value="0" <?php echo ($wo['config']['pending_verification'] == '0') ? 'checked': '';?>>
+                            <label for="pending_verification-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+
+
+                        <label for="user_registration">Default avatar</label><div class="clearfix"></div><br>
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" name="userDefaultAvatar" class="form-control" value="<?php echo $wo['config']['userDefaultAvatar']?>">
+                                <label class="form-label">path after : <?php echo $wo['config']['site_url']?>/</label>
+                            </div>
+                        </div>
+
+                        <label for="user_registration">Profile avatar crop settings</label><div class="clearfix"></div><br>
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" name="profile_picture_width_crop" class="form-control" value="<?php echo $wo['config']['profile_picture_width_crop']?>">
+                                <label class="form-label">width</label>
+                            </div>
+                            <br>
+                            <div class="form-line focused">
+                                <input type="text" name="profile_picture_height_crop" class="form-control" value="<?php echo $wo['config']['profile_picture_height_crop']?>">
+                                <label class="form-label">height</label>
+                            </div>
+                            <br>
+                            <div class="form-line focused">
+                                <input type="text" name="profile_picture_image_quality" class="form-control" value="<?php echo $wo['config']['profile_picture_image_quality']?>">
+                                <label class="form-label">quality ~50:100</label>
+                            </div>
+                        </div>
+
+                        <br>
+                        <label for="disable_phone_field">Phone Number Field</label>
+                        <div class="form-group">
+                            <input type="radio" <?php echo $disable_phone_field_on; ?> name="disable_phone_field"  value="on" id="disable_phone_field-enabled">
+                            <label for="disable_phone_field-enabled" id="disable_phone_field-enabled">Enabled</label>
+                            <input type="radio" <?php echo $disable_phone_field_off; ?> name="disable_phone_field" id="disable_phone_field-disabled" value="off">
+                            <label for="disable_phone_field-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <br>
+                        <label for="social_media_links">Show social media links</label>
+                        <div class="form-group">
+                            <input type="radio" <?php echo $social_media_links_on; ?> name="social_media_links"  value="on" id="social_media_links-enabled">
+                            <label for="social_media_links-enabled" id="social_media_links-enabled">Enabled</label>
+                            <input type="radio" <?php echo $social_media_links_off; ?> name="social_media_links" id="social_media_links-disabled" value="off">
+                            <label for="social_media_links-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        
+
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 float-left">
+            <div class="card">
+                <div class="header">
+                    <h2>General Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success general-settings-alert"></div>
+                    <form class="general-settings" method="POST">
+                        <label for="maintenance_mode">Google Place API <span class="black" data-toggle="popover" data-trigger="hover" data-content="Profile settings - location field auto complete"><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <br><br><div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="google_place_api" name="google_place_api" class="form-control" value="<?php echo $wo['config']['google_place_api'];?>">
+                                <label class="form-label">Profile settings <small>- location field auto complete</small></label>
+                            </div>
+                            <small>You can disable it by empty this text</small>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" name="max_swaps" class="form-control" value="<?php echo $wo['config']['max_swaps']?>">
+                                <label class="form-label">Max likes/swipes per day</label>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" name="img_blur_amount" class="form-control" value="<?php echo $wo['config']['img_blur_amount']?>">
+                                <label class="form-label">Private image blur percentage ( 0 : 100 ) </label>
+                            </div>
+                            <br>
+                        </div>
+
+
+                        <label for="login_auth">Two-factor authentication<span class="black" data-toggle="popover" data-trigger="hover" data-content="Send confirmation code to email or to SMS when user logins"><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="two_factor" id="two_factor-enabled" value="1" <?php echo ($wo['config']['two_factor'] == 1) ? 'checked': '';?>>
+                            <label for="two_factor-enabled">Enabled</label>
+                            <input type="radio" name="two_factor" id="two_factor-disabled" value="0" <?php echo ($wo['config']['two_factor'] == 0) ? 'checked': '';?>>
+                            <label for="two_factor-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="login_auth">Send Two-factor authentication code to</label>
+                        <div class="form-group">
+                            <input type="radio" name="two_factor_type" id="two_factor_type-email" value="email" <?php echo ($wo['config']['two_factor_type'] == 'email') ? 'checked': '';?>>
+                            <label for="two_factor_type-email">Email</label>
+                            <input type="radio" name="two_factor_type" id="two_factor_type-phone" value="phone" <?php echo ($wo['config']['two_factor_type'] == 'phone') ? 'checked': '';?>>
+                            <label for="two_factor_type-phone" class="m-l-20">Phone</label>
+                            <input type="radio" name="two_factor_type" id="two_factor_type-both" value="both" <?php echo ($wo['config']['two_factor_type'] == 'both') ? 'checked': '';?>>
+                            <label for="two_factor_type-both" class="m-l-20">Both</label>
+                        </div>
+                        <hr>
+
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="col-lg-4 col-md-4 float-right">
+            <div class="card">
+                <div class="header">
+                    <h2>Chat Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success chat-settings-alert"></div>
+                    <form class="chat-settings" method="POST">
+                        <label for="chatSystem">Chat System <span class="black" data-toggle="popover" data-trigger="hover" data-content="Enable chat system to chat with friends on the buttom of the page."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="chatSystem" id="chatSystem-enabled" value="1" <?php echo ($wo['config']['load_config_in_session'] == 1) ? 'checked': '';?>>
+                            <label for="chatSystem-enabled">Enabled</label>
+                            <input type="radio" name="chatSystem" id="chatSystem-disabled" value="0" <?php echo ($wo['config']['load_config_in_session'] == 0) ? 'checked': '';?>>
+                            <label for="chatSystem-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="message_seen">Message Seen Alert <span class="black" data-toggle="popover" data-trigger="hover" data-content="Checks if the message was seen in chat system, Recommended for powerful servers"><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="message_seen" id="message_seen-enabled" value="1" <?php echo ($wo['config']['load_config_in_session'] == 1) ? 'checked': '';?>>
+                            <label for="message_seen-enabled">Enabled</label>
+                            <input type="radio" name="message_seen" id="message_seen-disabled" value="0" <?php echo ($wo['config']['load_config_in_session'] == 0) ? 'checked': '';?>>
+                            <label for="message_seen-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="message_typing">Typing System<span class="black" data-toggle="popover" data-trigger="hover" data-content="Checks if the user is typing in chat system, Recommended for powerful servers"><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="message_typing" id="message_typing-enabled" value="1" <?php echo ($wo['config']['load_config_in_session'] == '1') ? 'checked': '';?>>
+                            <label for="message_typing-enabled">Enabled</label>
+                            <input type="radio" name="message_typing" id="message_typing-disabled" value="0" <?php echo ($wo['config']['load_config_in_session'] == '0') ? 'checked': '';?>>
+                            <label for="message_typing-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 float-right">
+            <div class="card">
+                <div class="header">
+                    <h2 class="pull-left">Upload Settings</h2></a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success upload-settings-alert"></div>
+                    <form class="upload-settings" method="POST">
+                        <label for="fileSharing">File Sharing <span class="black" data-toggle="popover" data-trigger="hover" data-content="Share & upload videos,images,files,sounds, etc.."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="fileSharing" id="fileSharing-enabled" value="1" <?php echo ($wo['config']['load_config_in_session'] == 1) ? 'checked': '';?>>
+                            <label for="fileSharing-enabled">Enabled</label>
+                            <input type="radio" name="fileSharing" id="fileSharing-disabled" value="0" <?php echo ($wo['config']['load_config_in_session'] == 0) ? 'checked': '';?>>
+                            <label for="fileSharing-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="video_upload">Video Upload <span class="black" data-toggle="popover" data-trigger="hover" data-content="Enable video upload to share & upload videos to the site."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="video_upload" id="video_upload-enabled" value="1" <?php echo ($wo['config']['load_config_in_session'] == 1) ? 'checked': '';?>>
+                            <label for="video_upload-enabled">Enabled</label>
+                            <input type="radio" name="video_upload" id="video_upload-disabled" value="0" <?php echo ($wo['config']['load_config_in_session'] == 0) ? 'checked': '';?>>
+                            <label for="video_upload-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="audio_upload">Audio Upload <span class="black" data-toggle="popover" data-trigger="hover" data-content="Enable audio upload to share & upload music to the site."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="audio_upload" id="audio_upload-enabled" value="1" <?php echo ($wo['config']['load_config_in_session'] == 1) ? 'checked': '';?>>
+                            <label for="audio_upload-enabled">Enabled</label>
+                            <input type="radio" name="audio_upload" id="audio_upload-disabled" value="0" <?php echo ($wo['config']['load_config_in_session'] == 0) ? 'checked': '';?>>
+                            <label for="audio_upload-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <label for="css_upload">CSS Upload <span class="black" data-toggle="popover" data-trigger="hover" data-content="Allow users to upload their own CSS file to design their profile."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="css_upload" id="css_upload-enabled" value="1" <?php echo ($wo['config']['load_config_in_session'] == 1) ? 'checked': '';?>>
+                            <label for="css_upload-enabled">Enabled</label>
+                            <input type="radio" name="css_upload" id="css_upload-disabled" value="0" <?php echo ($wo['config']['load_config_in_session'] == 0) ? 'checked': '';?>>
+                            <label for="css_upload-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="allowedExtenstion" name="allowedExtenstion" class="form-control" value="<?php echo $wo['config']['load_config_in_session']?>">
+                                <label class="form-label">Allowed extenstions (separated with comma,)</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="mime_types" name="mime_types" class="form-control" value="<?php echo $wo['config']['load_config_in_session']?>">
+                                <label class="form-label">Allowed MIME Types (separated with comma,)</label>
+                            </div>
+                        </div>
+                        <label for="maxUpload">Max upload size for videos, images, sounds, and files</label>
+                        <select class="form-control show-tick" id="maxUpload" name="maxUpload">
+                              <option value="2000000"    <?php echo ($wo['config']['load_config_in_session'] == 2000000)   ? ' selected': '';?>>2 MB</option>
+                              <option value="6000000"    <?php echo ($wo['config']['load_config_in_session'] == 6000000)   ? ' selected': '';?>>6 MB</option>
+                              <option value="12000000"   <?php echo ($wo['config']['load_config_in_session'] == 12000000)  ? ' selected': '';?>>12 MB</option>
+                              <option value="24000000"   <?php echo ($wo['config']['load_config_in_session'] == 24000000)  ? ' selected': '';?>>24 MB</option>
+                              <option value="48000000"   <?php echo ($wo['config']['load_config_in_session'] == 48000000)  ? ' selected': '';?>>48 MB</option>
+                              <option value="96000000"   <?php echo ($wo['config']['load_config_in_session'] == 96000000)  ? ' selected': '';?>>96 MB</option>
+                              <option value="256000000"  <?php echo ($wo['config']['load_config_in_session'] == 256000000) ? ' selected': '';?>>256 MB</option>
+                              <option value="512000000"  <?php echo ($wo['config']['load_config_in_session'] == 512000000) ? ' selected': '';?>>512 MB</option>
+                              <option value="1000000000" <?php echo ($wo['config']['load_config_in_session'] == 1000000000) ? ' selected': '';?>>1 GB</option>
+                              <option value="5000000000" <?php echo ($wo['config']['load_config_in_session'] == 5000000000) ? ' selected': '';?>>5 GB</option>
+                              <option value="10000000000" <?php echo ($wo['config']['load_config_in_session'] == 10000000000) ? ' selected': '';?>>10 GB</option>
+                        </select>
+                        <div class="clearfix"></div>
+                        <br><br>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>        -->
+        <div class="col-lg-4 col-md-4 float-right">
+            <div class="card">
+                <div class="header">
+                    <h2>Notifications Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success notifications-settings-alert"></div>
+                    <form class="notifications-settings" method="POST">
+                        <label for="emailNotification">Email Notifications <span class="black" data-toggle="popover" data-trigger="hover" data-content="Send user notifications via email."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="emailNotification" id="emailNotification-enabled" value="1" <?php echo ($wo['config']['emailNotification'] == 1) ? 'checked': '';?>>
+                            <label for="emailNotification-enabled">Enabled</label>
+                            <input type="radio" name="emailNotification" id="emailNotification-disabled" value="0" <?php echo ($wo['config']['emailNotification'] == 0) ? 'checked': '';?>>
+                            <label for="emailNotification-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-4 float-right">
+            <div class="card">
+                <div class="header">
+                    <h2>Activation Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success activation-settings-alert"></div>
+                    <form class="activation-settings" method="POST">
+                        <label for="activation_limit_system">Activation Limits <span class="black" data-toggle="popover" data-trigger="hover" data-content="user activation limits between sending new SMS or email."><i class="fa fa-question-circle fa-fw"></i></span></label>
+                        <div class="form-group">
+                            <input type="radio" name="activation_limit_system" id="activation_limit_system-enabled" value="1" <?php echo ($wo['config']['activation_limit_system'] == 1) ? 'checked': '';?>>
+                            <label for="activation_limit_system-enabled">Enabled</label>
+                            <input type="radio" name="activation_limit_system" id="activation_limit_system-disabled" value="0" <?php echo ($wo['config']['activation_limit_system'] == 0) ? 'checked': '';?>>
+                            <label for="activation_limit_system-disabled" class="m-l-20">Disabled</label>
+                        </div>
+
+                        <label for="user_registration">Time Limit & Request Settings</label><div class="clearfix"></div><br>
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <input type="text" name="max_activation_request" class="form-control" value="<?php echo $wo['config']['max_activation_request']?>">
+                                <label class="form-label">Max requests per user</label>
+                            </div>
+                            <br>
+                            <div class="form-line focused">
+                                <input type="text" name="activation_request_time_limit" class="form-control" value="<?php echo $wo['config']['activation_request_time_limit']?>">
+                                <label class="form-label">Time between requests (in minutes)</label>
+                            </div>
+                        </div>
+
+
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 float-right">
+            <div class="card">
+                <div class="header">
+                    <h2>FFMPEG system settings</h2>
+                </div>
+                <div class="body">
+                    <div class="clearfix">
+                        <div>
+                            <p>
+                                This system will compress, convert,optimzise and crop videos to mp4. This system require "ffmpeg" to be installed in your server.
+                            </p>
+                        </div>
+                        <?php
+                        if(!function_exists('exec')) {
+                            ?>
+                            <div class="alert alert-danger">
+                                <i class="fa fa-fw fa-exclamation-triangle"></i> <strong>Required:</strong> exec function is Disabled.
+                            </div>
+                        <?php } ?>
+                        <form class="form general-settings-form"  method="POST">
+                            <div class="alert alert-success ffmpeg-form-alert"></div>
+                            <div class="form-group form-float">
+                                <br>
+                                <label for="upload_system">FFMPEG system</label>
+                                <div class="form-group">
+                                    <input type="radio" <?php echo $ffmpeg_sys_on; ?> name="ffmpeg_sys"  value="1" id="ffmpeg_sys-enabled">
+                                    <label for="ffmpeg_sys-enabled" id="ffmpeg_sys-enabled">Enabled</label>
+                                    <input type="radio" <?php echo $ffmpeg_sys_off; ?> name="ffmpeg_sys" id="ffmpeg_sys-disabled" value="0">
+                                    <label for="ffmpeg_sys-disabled" class="m-l-20">Disabled</label>
+                                </div>
+                                <br>
+                                <div class="form-line">
+                                    <br><br>
+                                    <input type="text" id="ffmpeg_binary" name="ffmpeg_binary" class="form-control" value="<?php echo($ffmpeg_binary); ?>">
+                                    <div class="clearfix"></div>
+                                    <label class="form-label">
+                                        FFmpeg binary file path: on Linux(/usr/bin/ffmpeg) or Windows(C:\\ffmpeg\bin\ffmpeg.exe)
+                                        <div class="clearfix"></div>
+                                    </label>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <br>
+                                <div class="form-line">
+                                    <input type="number" id="max_video_duration" name="max_video_duration" class="form-control" value="<?php echo($max_video_duration); ?>">
+                                    <div class="clearfix"></div>
+                                    <label class="form-label">
+                                        Max video duration in seconds
+                                        <div class="clearfix"></div>
+                                    </label>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="header">
+                    <h2>API Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="clearfix">
+                        <form class="form general-api-form" method="POST">
+                            <div class="alert alert-success api-settings-alert"></div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="text" id="yt_api" name="yt_api" class="form-control" value="<?php echo $wo['config']['yt_api']; ?>">
+                                    <label class="form-label">
+                                        Youtube api key..
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="text" id="giphy_api" name="giphy_api" class="form-control" value="<?php echo $wo['config']['giphy_api']; ?>">
+                                    <label class="form-label">
+                                        Giphy api key
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+$(function() {
+    var form_general_settings = $('form.general-settings');
+    form_general_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_general_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+            	form_general_settings.find('button').text('Save');
+            	$('.general-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+            	setTimeout(function () {
+            		$('.general-settings-alert').empty();
+            	}, 2000);
+            }
+        }
+    });
+
+    var form_general_settings1 = $('form.general-settings-form');
+    form_general_settings1.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_general_settings1.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+            	form_general_settings1.find('button').text('Save');
+            	$('.ffmpeg-form-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+            	setTimeout(function () {
+            		$('.ffmpeg-form-alert').empty();
+            	}, 2000);
+            }
+        }
+    });
+
+    
+    var form_api_settings = $('form.general-api-form');
+    form_api_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_api_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_api_settings.find('button').text('Save');
+                $('.api-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.api-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_user_settings = $('form.user-settings');
+    form_user_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_user_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_user_settings.find('button').text('Save');
+                $('.user-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.user-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_chat_settings = $('form.chat-settings');
+    form_chat_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_chat_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_chat_settings.find('button').text('Save');
+                $('.chat-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.chat-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_notifications_settings = $('form.notifications-settings');
+    form_notifications_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_notifications_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_notifications_settings.find('button').text('Save');
+                $('.notifications-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.notifications-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_activation_settings = $('form.activation-settings');
+    form_activation_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_activation_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_activation_settings.find('button').text('Save');
+                $('.activation-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.activation-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_upload_settings = $('form.upload-settings');
+    form_upload_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=general-settings',
+        beforeSend: function() {
+            form_upload_settings.find('.waves-effect').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_upload_settings.find('.waves-effect').text('Save');
+                $('.upload-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.upload-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+});
+
+</script>

@@ -1,0 +1,78 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Advertisements > Manage Website Ads</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Manage Website Ads</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success ads-settings-alert"></div>
+                    <form class="ads-settings" method="POST">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="header" id="header" class="form-control" cols="30" rows="5"><?php echo GetAd('header', true);?></textarea>
+                                <label class="form-label">Header <small>(Appears on all pages right under the nav bar)</small></label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="footer" id="footer" class="form-control" cols="30" rows="5"><?php echo GetAd('footer', true);?></textarea>
+                                <label class="form-label">Footer <small>(Appears on all pages right before the footer)</small></label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="home_side_bar" id="home_side_bar" class="form-control" cols="30" rows="5"><?php echo GetAd('home_side_bar', true);?></textarea>
+                                <label class="form-label">Home Sidebar <small>(Appears home page under side bar)</small></label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="profile_side_bar" id="profile_side_bar" class="form-control" cols="30" rows="5"><?php echo GetAd('profile_side_bar', true);?></textarea>
+                                <label class="form-label">Profile Sidebar <small>(Appears on profile page under side bar)</small></label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+$(function() {
+    var form_ads_settings = $('form.ads-settings');
+    form_ads_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=update-ads&p=manage-website-ads',
+        beforeSend: function() {
+            form_ads_settings.find('.waves-effect').text('Please wait..');
+        },
+        beforeSubmit : function(arr, $form, options){
+          delete arr[0];
+          delete arr[1];
+          delete arr[2];
+          delete arr[3];
+          arr.push({name:'header', value:btoa(unescape(encodeURIComponent($('#header').val())))});  
+          arr.push({name:'footer', value:btoa(unescape(encodeURIComponent($('#footer').val())))});
+          arr.push({name:'home_side_bar', value:btoa(unescape(encodeURIComponent($('#home_side_bar').val())))});
+          arr.push({name:'profile_side_bar', value:btoa(unescape(encodeURIComponent($('#profile_side_bar').val())))});
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_ads_settings.find('.waves-effect').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.ads-settings-alert').html('<i class="fa fa-check"></i> Ads updated successfully');
+                setTimeout(function () {
+                    $('.ads-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+});
+</script>

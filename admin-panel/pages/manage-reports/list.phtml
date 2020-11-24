@@ -1,0 +1,41 @@
+<tr class="setting-userlist <?php echo ($wo['report']['seen'] == 0) ? ' report-not-seen' : '';?> " id="ReportID_<?php echo $wo['report']['id']?>" >
+   <td><?php echo $wo['report']['id']?></td>
+   <td class="pointer">
+      <?php echo ucfirst($wo['report']['type']); ?>
+   </td>
+   <td>
+      <a href="<?php echo $wo['site_url'] . '/@' . $wo['report']['reporter']->username; ?>" target="_blank">
+      <img src="<?php echo $wo['report']['reporter']->avater->avater;?>" class="setting-avatar" alt="<?php echo $wo['report']['reporter']->username;?> Profile Picture">
+      <?php echo $wo['report']['reporter']->username; ?>
+      </a>
+   </td>
+    <td>
+        <a href="<?php echo $wo['site_url'] . '/@' . $wo['report']['reported']->username; ?>" target="_blank">
+            <img src="<?php echo $wo['report']['reported']->avater->avater;?>" class="setting-avatar" alt="<?php echo $wo['report']['reported']->username;?> Profile Picture">
+            <?php echo $wo['report']['reported']->username; ?>
+        </a>
+    </td>
+    <td>
+        <?php echo nl2br($wo['report']['report_text']);?>
+    </td>
+   <td>
+      <div class=" ajax-time" title="<?php echo date('c', strtotime($wo['report']['created_at'])); ?>">
+         <?php echo Time_Elapsed_String(strtotime($wo['report']['created_at']));?>
+      </div>
+   </td>
+   <td>
+      <button class="btn btn-success waves-effect waves-light" onclick="Wo_MarkSafeReportedPost(<?php echo $wo['report']['id']?>);">MARK SAFE</button>
+      <?php if ($wo['report']['type'] == 'post'): ?>
+         <button class="btn btn-danger waves-effect waves-light" onclick="Wo_DeleteReportedContent(<?php echo $wo['report']['story']['id']?>,<?php echo $wo['report']['id']?>,'post');">DELETE</button>
+      <?php elseif($wo['report']['type'] == 'profile'): ?>
+      <button class="btn btn-danger waves-effect waves-light" onclick="Wo_DeleteReportedContent(<?php echo $wo['report']['user']['id']?>,<?php echo $wo['report']['id']?>,'user');">DELETE</button>
+      <button class="btn btn-info waves-effect waves-light" onclick="$('#read_report').modal().find('.report_text').text('<?php echo htmlspecialchars($wo['report']['text']); ?>')">VIEW REPORT</button>
+      <?php elseif($wo['report']['type'] == 'page'): ?>
+         <button class="btn btn-danger waves-effect waves-light" onclick="Wo_DeleteReportedContent(<?php echo $wo['report']['page']['page_id']?>,<?php echo $wo['report']['id']?>,'page');">DELETE</button>
+         <button class="btn btn-info waves-effect waves-light" onclick="$('#read_report').modal().find('.report_text').text('<?php echo htmlspecialchars($wo['report']['text']); ?>')">VIEW REPORT</button>
+      <?php elseif($wo['report']['type'] == 'group'): ?>
+         <button class="btn btn-danger waves-effect waves-light" onclick="Wo_DeleteReportedContent(<?php echo $wo['report']['group']['id']?>,<?php echo $wo['report']['id']?>,'group');">DELETE</button>
+         <button class="btn btn-info waves-effect waves-light" onclick="$('#read_report').modal().find('.report_text').text('<?php echo htmlspecialchars($wo['report']['text']); ?>')">VIEW REPORT</button>
+      <?php endif; ?>
+   </td>
+</tr>

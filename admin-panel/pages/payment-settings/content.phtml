@@ -1,0 +1,205 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Settings > Payment System Settings</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h2>Payment System Settings (Credit system + Pro System)</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success payment-settings-alert"></div>
+                    <form class="payment-settings" method="POST">
+                        <label for="currency_symbol">Currency</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <select class="form-control show-tick" id="currency" name="currency">
+                                    <option value="USD"  <?php echo ($wo['config']['currency'] == 'USD')   ? ' selected' : '';?>>USD</option>
+                                    <option value="EUR" <?php echo ($wo['config']['currency'] == 'EUR')   ? ' selected' : '';?>>EUR</option>
+                                    <option value="JPY" <?php echo ($wo['config']['currency'] == 'JPY')   ? ' selected' : '';?>>JPY</option>
+                                    <option value="TRY" <?php echo ($wo['config']['currency'] == 'TRY')   ? ' selected' : '';?>>TRY</option>
+                                    <option value="GBP" <?php echo ($wo['config']['currency'] == 'GBP')   ? ' selected' : '';?>>GBP</option>
+                                    <option value="RUB" <?php echo ($wo['config']['currency'] == 'RUB')   ? ' selected' : '';?>>RUB</option>
+                                    <option value="PLN" <?php echo ($wo['config']['currency'] == 'PLN')   ? ' selected' : '';?>>PLN</option>
+                                    <option value="ILS" <?php echo ($wo['config']['currency'] == 'ILS')   ? ' selected' : '';?>>ILS</option>
+                                    <option value="BRL" <?php echo ($wo['config']['currency'] == 'BRL')   ? ' selected' : '';?>>BRL</option>
+                                    <option value="INR" <?php echo ($wo['config']['currency'] == 'INR')   ? ' selected' : '';?>>INR</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label for="currency_symbol">Currency symbol</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="currency_symbol" name="currency_symbol" class="form-control" value="<?php echo $wo['config']['currency_symbol'];?>">
+                            </div>
+                        </div>
+                        <label for="paypal_mode">Stripe</label>
+                        <br><br>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="stripe_version" name="stripe_version" class="form-control" value="<?php echo $wo['config']['stripe_version'];?>">
+                                <label class="form-label">Stripe version</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="stripe_secret" name="stripe_secret" class="form-control" value="<?php echo $wo['config']['stripe_secret'];?>">
+                                <label class="form-label">Stripe API Secret Key <small>Your Stripe secret key that starts with sk_</small></label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="stripe_id" name="stripe_id" class="form-control" value="<?php echo $wo['config']['stripe_id'];?>">
+                                <label class="form-label">Stripe Publishable Key <small>Your Stripe publishable key that starts with pk_</small></label>
+                            </div>
+                        </div>
+                        <br>
+                        <label for="paypal_mode">PayPal Mode</label>
+                        <div class="form-group">
+                            <input type="radio" name="paypal_mode" id="paypal_mode-enabled" value="live" <?php echo ($wo['config']['paypal_mode'] == 'live') ? 'checked': '';?>>
+                            <label for="paypal_mode-enabled">Live</label>
+                            <input type="radio" name="paypal_mode" id="paypal_mode-disabled" value="sandbox" <?php echo ($wo['config']['paypal_mode'] == 'sandbox') ? 'checked': '';?>>
+                            <label for="paypal_mode-disabled" class="m-l-20">SandBox</label>
+                        </div> 
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="paypal_id" name="paypal_id" class="form-control" value="<?php echo $wo['config']['paypal_id'];?>">
+                                <label class="form-label">PayPal Client ID</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="paypal_secret" name="paypal_secret" class="form-control" value="<?php echo $wo['config']['paypal_secret'];?>">
+                                <label class="form-label">PayPal Secret Key</label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h2>Local bank payment</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success bank-settings-alert"></div>
+                    <form class="bank-settings" method="POST">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="bank_description" id="bank_description" class="form-control" cols="30" rows="5"><?php echo $wo['config']['bank_description']; ?></textarea>
+                                <label class="form-label">Bank Description</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="bank_transfer_note" id="bank_transfer_note" class="form-control" cols="30" rows="5"><?php echo $wo['config']['bank_transfer_note']; ?></textarea>
+                                <label class="form-label">Bank transfer note</label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h2>Paysera SMS payment</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success pay-settings-alert"></div>
+                    <form class="pay-settings" method="POST">
+                        <label for="currency_symbol">Project ID</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="paysera_project_id" name="paysera_project_id" class="form-control" value="<?php echo $wo['config']['paysera_project_id'];?>">
+                            </div>
+                        </div>
+                        <label for="currency_symbol">Project password</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="paysera_password" name="paysera_password" class="form-control" value="<?php echo $wo['config']['paysera_password'];?>">
+                            </div>
+                        </div>
+                        <label for="paysera_test_mode">Test mode</label>
+                        <div class="form-group">
+                            <input type="radio" name="paysera_test_mode" id="paysera_test_mode-enabled" value="live" <?php echo ($wo['config']['paysera_test_mode'] == 'live') ? 'checked': '';?>>
+                            <label for="paysera_test_mode-enabled">Live</label>
+                            <input type="radio" name="paysera_test_mode" id="paysera_test_mode-disabled" value="test" <?php echo ($wo['config']['paysera_test_mode'] == 'test') ? 'checked': '';?>>
+                            <label for="paysera_test_mode-disabled" class="m-l-20">Test</label>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+$(function() {
+    var form_payment_settings = $('form.payment-settings');
+    form_payment_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=payment-settings',
+        beforeSend: function() {
+            form_payment_settings.find('.waves-effect').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_payment_settings.find('.waves-effect').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.payment-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.payment-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_bankpayment_settings = $('form.bank-settings');
+    form_bankpayment_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=payment-settings',
+        beforeSend: function() {
+            form_bankpayment_settings.find('.waves-effect').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_bankpayment_settings.find('.waves-effect').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.bank-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.bank-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+
+    var form_pay_settings = $('form.pay-settings');
+    form_pay_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=payment-settings',
+        beforeSend: function() {
+            form_pay_settings.find('.waves-effect').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_pay_settings.find('.waves-effect').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.pay-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.pay-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+});
+</script>

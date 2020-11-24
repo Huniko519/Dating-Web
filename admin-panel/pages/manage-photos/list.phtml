@@ -1,0 +1,30 @@
+<?php if($wo['mediafilelist']->user){?>
+<tr class="user-list" id="PhotoID_<?php echo $wo['mediafilelist']->id?>" data-photo-id="<?php echo $wo['mediafilelist']->id?>" style="width: 25%; float: left;margin-top: 20px;">
+    <td style="border: 0px;text-align: center;display: block;">
+        <a href="<?php echo $wo['site_url'] . '/@' . $wo['mediafilelist']->user->username; ?>" target="_blank">
+            <img src="<?php echo $wo['mediafilelist']->user->avater->avater;?>" class="setting-avatar" alt="<?php echo $wo['mediafilelist']->user->username;?> Profile Picture">
+            <?php echo $wo['mediafilelist']->user->username; ?>
+        </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span style="color:#607D8B;font-size: 11px;font-weight: bold;" class=" ajax-time" title="<?php echo date('c', strtotime($wo['mediafilelist']->created_at)); ?>">
+            <?php echo Time_Elapsed_String(strtotime($wo['mediafilelist']->created_at));?>
+        </span>
+        <hr>
+        <a href="<?php echo $wo['site_url'] . '/@' . $wo['mediafilelist']->user->username; ?>" target="_blank" >
+            <img src="<?php echo GetMedia($wo['mediafilelist']->file); ?>" class="setting-avatar" style="min-width: 197px;object-fit: cover;height: 250px;">
+        </a>
+        <div class="clearfix"></div><br>
+        <div style="margin: 0 auto;display: inline-flex;">
+        <button onclick="Wo_DeletePhoto(<?php echo $wo['mediafilelist']->id?>,'<?php echo $wo['mediafilelist']->file?>');" type="button" class="btn btn-danger waves-effect waves-light" style="display: inline-block;float: left;">DELETE</button>
+
+        <?php if ($wo['config']['review_media_files'] == 1 && $wo['mediafilelist']->is_approved == 0 ) {?>
+            &nbsp;
+            <button onclick="Wo_ApprovePhoto(<?php echo $wo['mediafilelist']->id?>,'<?php echo $wo['mediafilelist']->file?>');" id="mediafile_<?php echo $wo['mediafilelist']->id?>" type="button" class="btn btn-success waves-effect waves-light" style="display: inline-block;float: left;">APPROVE</button>
+        <?php } else if ($wo['config']['review_media_files'] == 1 && $wo['mediafilelist']->is_approved == 1 ) { ?>
+            &nbsp;
+            <button onclick="Wo_DisApprovePhoto(<?php echo $wo['mediafilelist']->id?>,'<?php echo $wo['mediafilelist']->file?>');" id="mediafile_<?php echo $wo['mediafilelist']->id?>" type="button" class="btn btn-warning waves-effect waves-light" style="display: inline-block;float: left;">Disapprove</button>
+        <?php } ?>
+        </div>
+    </td>
+</tr>
+<?php } ?>

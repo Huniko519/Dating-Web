@@ -1,0 +1,9 @@
+<tr id="<?php echo $wo['gender']['id'];?>">
+   <td><?php echo $wo['gender_id'];?></td>
+    <td id="edit_<?php echo $wo['gender_key'];?>"><?php echo $wo['gender']['isd'];?></td>
+   <td id="edit_<?php echo $wo['gender_key'];?>"><?php echo $wo['gender']['name'];?></td>
+   <td>
+      <button type="button" class="btn btn-default waves-effect btn-lang m-r-20" data-id="<?php echo $wo['gender']['id'];?>" data-key="<?php echo $wo['gender_key'];?>" data-toggle="modal" data-target="#defaultModal">EDIT</button>
+      <button onclick="Wo_DeleteContry('<?php echo $wo['gender']['id'];?>');" type="button" class="btn btn-danger waves-effect waves-light">DELETE</button>
+   </td>
+</tr>

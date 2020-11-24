@@ -1,0 +1,120 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>General Settings > Upload Settings > Configure Storage Settings</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6 ">
+            <div class="card">
+                <div class="header">
+                    <h2>Amazon S3 Settings</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success general-settings-alert"></div>
+                    <form class="general-settings" method="POST">
+                        <label for="amazone_s3">Amazon S3 Storage</label>
+                        <div class="form-group">
+                            <input type="radio" name="amazone_s3" id="amazone_s3-enabled" value="1" <?php echo ($wo['config']['amazone_s3'] == 1) ? 'checked': '';?>>
+                            <label for="amazone_s3-enabled">Enabled</label>
+                            <input type="radio" name="amazone_s3" id="amazone_s3-disabled" value="0" <?php echo ($wo['config']['amazone_s3'] == 0) ? 'checked': '';?>>
+                            <label for="amazone_s3-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="bucket_name" name="bucket_name" class="form-control" value="<?php echo $wo['config']['bucket_name']?>">
+                                <label class="form-label">Amazon Bucket Name</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="amazone_s3_key" name="amazone_s3_key" class="form-control" value="<?php echo $wo['config']['amazone_s3_key']?>">
+                                <label class="form-label">Amazon S3 Key</label>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="amazone_s3_s_key" name="amazone_s3_s_key" class="form-control" value="<?php echo $wo['config']['amazone_s3_s_key']?>">
+                                <label class="form-label">Amazon S3 Secret Key</label>
+                            </div>
+                        </div>
+                        <label for="region">Amazon S3 bucket Region</label>
+                        <select class="form-control show-tick" id="region" name="region">
+                          <option value="us-east-2" <?php echo ($wo['config']['region'] == 'us-east-2')   ? ' selected' : '';?> >US East (Ohio)</option>
+		                  <option value="us-west-1" <?php echo ($wo['config']['region'] == 'us-east-1')   ? ' selected' : '';?> >US East (N. Virginia)</option>
+                          <option value="us-west-1" <?php echo ($wo['config']['region'] == 'us-west-1')   ? ' selected' : '';?> >US West (N. California)</option>
+                          <option value="us-west-2" <?php echo ($wo['config']['region'] == 'us-west-2')   ? ' selected' : '';?> >US West (Oregon)</option>
+		                  <option value="ap-east-1" <?php echo ($wo['config']['region'] == 'ap-east-1')   ? ' selected' : '';?> >Asia Pacific (Hong Kong)</option>
+                          <option value="ap-south-1" <?php echo ($wo['config']['region'] == 'ap-south-1')   ? ' selected' : '';?> >Asia Pacific (Mumbai)</option>
+		                  <option value="ap-southeast-1" <?php echo ($wo['config']['region'] == 'ap-southeast-1')   ? ' selected' : '';?> >Asia Pacific (Singapore)</option>
+		                  <option value="ap-southeast-2" <?php echo ($wo['config']['region'] == 'ap-southeast-2')   ? ' selected' : '';?> >Asia Pacific (Sydney)</option>
+		                  <option value="ap-northeast-1" <?php echo ($wo['config']['region'] == 'ap-northeast-1')   ? ' selected' : '';?> >Asia Pacific (Tokyo)</option>
+
+                            <option value="cn-north-1" <?php echo ($wo['config']['region'] == 'cn-north-1')   ? ' selected' : '';?> >China (Beijing)</option>
+                            <option value="cn-northwest-1" <?php echo ($wo['config']['region'] == 'cn-northwest-1')   ? ' selected' : '';?> >China (Ningxia)</option>
+
+                          <option value="ca-central-1" <?php echo ($wo['config']['region'] == 'ca-central-1')   ? ' selected' : '';?> >Canada (Central)</option>
+		                  <option value="eu-central-1" <?php echo ($wo['config']['region'] == 'eu-central-1')   ? ' selected' : '';?> >EU (Frankfurt)</option>
+		                  <option value="eu-west-1" <?php echo ($wo['config']['region'] == 'eu-west-1')   ? ' selected' : '';?> >EU (Ireland)</option>
+                          <option value="eu-west-2" <?php echo ($wo['config']['region'] == 'eu-west-2')   ? ' selected' : '';?> >EU (London)</option>
+                            <option value="eu-west-3" <?php echo ($wo['config']['region'] == 'eu-west-3')   ? ' selected' : '';?> >EU (Paris)</option>
+                            <option value="eu-north-1" <?php echo ($wo['config']['region'] == 'eu-north-1')   ? ' selected' : '';?> >EU (Stockholm)</option>
+                            <option value="me-south-1" <?php echo ($wo['config']['region'] == 'me-south-1')   ? ' selected' : '';?> >Middle East (Bahrain)</option>
+                          <option value="sa-east-1" <?php echo ($wo['config']['region'] == 'sa-east-1')   ? ' selected' : '';?> >South America (São Paulo)</option>
+                            <option value="us-gov-east-1" <?php echo ($wo['config']['region'] == 'us-gov-east-1')   ? ' selected' : '';?> >AWS GovCloud (US-East)</option>
+                            <option value="us-gov-west-1" <?php echo ($wo['config']['region'] == 'us-gov-west-1')   ? ' selected' : '';?> >AWS GovCloud (US-West)</option>
+                        </select>
+                        <div class="clearfix"></div>
+                        <br><br>
+                        <span class="help-block ">1. Before enabling Amazon S3, make sure you upload the whole "upload/" folder to your bucket.</span>
+		                <span class="help-block ">2. Before disabling Amazon S3, make sure you download the whole "upload/" folder to your server.</span>
+		                <span class="help-block ">3. We recommend to upload the folder and files via <a href="http://s3tools.org/s3cmd">S3cmd</a>.</span>
+		                <span class="help-block ">4. If your site is still brand new, you can escape the upload step, but make sure to click on "Test Connection".</span>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                        <button type="button" class="btn btn-warning m-t-15 waves-effect" onclick="Wo_TestS3()">Test Connection</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+function Wo_TestS3() {
+	$('form.general-settings').find('.btn-warning').text('Please wait..');
+	$.get(Wo_Ajax_Requests_File(), {f:'admin_setting', s: 'test_s3', p: 'amazon-settings'}, function (data) {
+		if (data.status == 200) {
+			alert('Connection established!');
+		} else if (data.status == 300) {
+			alert('Bucket doesn\'t exists');
+		} else if (data.status == 500) {
+			alert('Your s3 account doesn\'t have any buckets, please create one.');
+		} else if (data.status == 400) {
+			alert(data.message);
+		} else  {
+			alert('Error while connecting to amazone, please check your details');
+		}
+		$('form.general-settings').find('.btn-warning').text('Test Connection');
+	});
+}
+
+$(function() {
+    var form_general_settings = $('form.general-settings');
+    form_general_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting&p=amazon-settings',
+        beforeSend: function() {
+            form_general_settings.find('.btn-primary').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+            	form_general_settings.find('.btn-primary').text('Save');
+            	$('.general-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+            	setTimeout(function () {
+            		$('.general-settings-alert').empty();
+            	}, 2000);
+            }
+        }
+    });
+});
+
+</script>

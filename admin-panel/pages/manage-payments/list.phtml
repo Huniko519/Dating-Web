@@ -1,0 +1,37 @@
+<tr class="user-list" id="PaymentID_<?php echo $wo['userlist']['id']?>" data-payment-id="<?php echo $wo['paymentlist']->id;?>">
+   <td><?php echo $wo['paymentlist']->id?></td>
+   <td>
+      <a href="<?php echo $wo['site_url'] . '/@' . $wo['userlist']['username'] ; ?>" target="_blank" >
+      <img src="<?php echo GetMedia($wo['userlist']['avater']); ?>" class="setting-avatar" alt="<?php echo $wo['userlist']['avater']?> Profile Picture">
+      <?php
+        $name = $wo['userlist']['first_name'] . ' ' . $wo['userlist']['last_name'];
+      echo ( $name !== ' ' ? $name : $wo['userlist']['username']); ?>
+      </a>
+   </td>
+   <td><?php echo $wo['paymentlist']->type?></td>
+   <td><?php echo $wo['config']['currency_symbol'].$wo['paymentlist']->amount?></td>
+   <td><?php echo $wo['paymentlist']->date?></td>
+    <td><?php
+        if( $wo['paymentlist']->pro_plan > 0 ){
+            if( $wo['paymentlist']->pro_plan == 1 ){
+                echo 'WEEKLY';
+            }
+            if( $wo['paymentlist']->pro_plan == 2 ){
+                echo 'MONTHLY';
+            }
+            if( $wo['paymentlist']->pro_plan == 3 ){
+                echo 'YEARLY';
+            }
+            if( $wo['paymentlist']->pro_plan == 4 ){
+                echo 'LIFETIME';
+            }
+        }
+        if($wo['paymentlist']->credit_amount > 0 ){
+            echo $wo['paymentlist']->credit_amount . ' Credits';
+        }
+        ?></td>
+    <td><?php echo $wo['paymentlist']->via?></td>
+<!--   <td>-->
+<!--      <button onclick="Wo_DeletePayment(<?php ////echo $wo['paymentlist']->id?>);" type="button" class="btn btn-danger waves-effect waves-light">DELETE</button>
+<!--   </td>-->
+</tr>

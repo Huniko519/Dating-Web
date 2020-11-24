@@ -1,0 +1,190 @@
+<?php 
+
+$page           = (!empty($_GET['page-id']) && is_numeric($_GET['page-id'])) ? Secure($_GET['page-id']) : 1;
+$filter_keyword = (!empty($_GET['query'])) ? Secure($_GET['query']) : '';
+$db->pageLimit  = 50;
+$payments = $db->objectbuilder()->orderBy('id', 'DESC')->paginate('payments', $page);
+if (($page > $db->totalPages) && !empty($_GET['page-id'])) {
+  header("Location: " . Wo_LoadAdminLinkSettings('manage-payments'));
+  exit();
+}
+
+?>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Earnings > Manage Payments</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box bg-black hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">attach_money</i>
+                </div>
+                <div class="content">
+                    <div class="text">EARNINGS</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo Wo_CountThisMonthPayment(); ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box bg-purple hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">money</i>
+                </div>
+                <div class="content">
+                    <div class="text">CREDITS SALES</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo Wo_CreditsPaymentData(); ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box bg-green hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">stars</i>
+                </div>
+                <div class="content">
+                    <div class="text">WEEKLY SALES</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo Wo_CountAllPaymentData('1'); ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box bg-orange hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">whatshot</i>
+                </div>
+                <div class="content">
+                    <div class="text">MONTHLY SALES</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo Wo_CountAllPaymentData('2'); ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box bg-red hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">flash_on</i>
+                </div>
+                <div class="content">
+                    <div class="text">YEARLY SALES</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo Wo_CountAllPaymentData('3'); ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+            <div class="info-box bg-blue hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons"><svg style="width:90%;height:90%;" viewBox="0 0 24 24">
+                            <path fill="#fff" d="M2.81,14.12L5.64,11.29L8.17,10.79C11.39,6.41 17.55,4.22 19.78,4.22C19.78,6.45 17.59,12.61 13.21,15.83L12.71,18.36L9.88,21.19L9.17,17.66C7.76,17.66 7.76,17.66 7.05,16.95C6.34,16.24 6.34,16.24 6.34,14.83L2.81,14.12M5.64,16.95L7.05,18.36L4.39,21.03H2.97V19.61L5.64,16.95M4.22,15.54L5.46,15.71L3,18.16V16.74L4.22,15.54M8.29,18.54L8.46,19.78L7.26,21H5.84L8.29,18.54M13,9.5A1.5,1.5 0 0,0 11.5,11A1.5,1.5 0 0,0 13,12.5A1.5,1.5 0 0,0 14.5,11A1.5,1.5 0 0,0 13,9.5Z" />
+                        </svg></i>
+                </div>
+                <div class="content">
+                    <div class="text">LIFETIME SALES</div>
+                    <div class="number count-to" data-from="0" data-to="<?php echo Wo_CountAllPaymentData('4'); ?>" data-speed="1000" data-fresh-interval="20"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Manage & Edit Payments</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive1">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Payment Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Note</th>
+                                <th>Processed by</th>
+                                <!-- <th>Action</th>-->
+                            </tr>
+                            </thead>
+                            <tbody>
+                              <?php 
+                                foreach ($payments as $paymentlist) {
+                                    $wo['userlist'] = Wo_UserData($paymentlist->user_id);
+                                    $wo['paymentlist'] = $paymentlist;
+                                    echo Wo_LoadAdminPage('manage-payments/list');
+                                }
+                              ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="wo-admincp-feturepager">
+                      <div class="pull-left">
+                        <span>
+                          <?php echo "Showing $page out of " . $db->totalPages; ?>
+                        </span>
+                      </div>
+                      <div class="pull-right">
+                        <nav>
+                          <ul class="pagination">
+                            <li>
+                              <a href="<?php echo Wo_LoadAdminLinkSettings('manage-payments?page-id=1'); ?>" class="waves-effect" title='First Page'>
+                                  <i class="material-icons">first_page</i>
+                              </a>
+                            </li>
+                            <?php if ($page > 1) {  ?>
+                              <li>
+                                  <a href="<?php echo Wo_LoadAdminLinkSettings('manage-payments?page-id=' . ($page - 1)); ?>" class="waves-effect" title='Previous Page'>
+                                      <i class="material-icons">chevron_left</i>
+                                  </a>
+                              </li>
+                            <?php  } ?>
+
+                            <?php 
+                              $nums       = 0;
+                              $nums_pages = ($page > 4) ? ($page - 4) : $page;
+
+                              for ($i=$nums_pages; $i <= $db->totalPages; $i++) { 
+                                if ($nums < 20) {
+                            ?>
+                              <li class="<?php echo ($page == $i) ? 'active' : ''; ?>">
+                                <a href="<?php echo Wo_LoadAdminLinkSettings('manage-payments?page-id=' . ($i)); ?>" class="waves-effect">
+                                  <?php echo $i ?>   
+                                </a>
+                              </li>
+
+                            <?php } $nums++; }?>
+
+                            <?php if ($db->totalPages > $page) { ?>
+                              <li>
+                                  <a href="<?php echo Wo_LoadAdminLinkSettings('manage-payments?page-id=' . ($page + 1)); ?>" class="waves-effect" title="Next Page">
+                                      <i class="material-icons">chevron_right</i>
+                                  </a>
+                              </li>
+                            <?php } ?>
+                            <li>
+                              <a href="<?php echo Wo_LoadAdminLinkSettings('manage-payments?page-id=' . ($db->totalPages)); ?>" class="waves-effect" title='Last Page'>
+                                  <i class="material-icons">last_page</i>
+                              </a>
+                            </li>
+                          </ul>
+                        </nav>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+<script>
+
+function Wo_DeletePayment(payment_id) {
+  if (confirm("Are you sure you want to delete this payment?") == false) {
+    return false;
+  }
+  hash_id = '<?php echo Wo_CreateSession();?>';
+  $('#PaymentID_' + user_id).fadeOut(300, function() {
+    $(this).remove();
+  });
+  $.get(Wo_Ajax_Requests_File(),{f:'admin_setting', s:'delete_payment', payment_id: payment_id, hash_id: hash_id});
+}
+
+</script>

@@ -1,0 +1,54 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2>Languages > Add New Country</h2>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h2>Add New Country</h2>
+                </div>
+                <div class="body">
+                    <div class="alert alert-success key-settings-alert"></div>
+                    <form class="key-settings" method="POST">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="country" name="country" class="form-control">
+                                <label class="form-label">Country Name</label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Add Country</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+    <script>
+
+        $(function() {
+
+            var form_key_settings = $('form.key-settings');
+                form_key_settings.ajaxForm({
+                    url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=add_new_country&p=manage-countries',
+                    beforeSend: function() {
+                        form_key_settings.find('button').text('Please wait..');
+                    },
+                    success: function(data) {
+                        if (data.status == 200) {
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                            $('.key-settings-alert').html('<i class="fa fa-check"></i> Country successfully added');
+                            setTimeout(function () {
+                                window.location.href = data.url;
+                            }, 1000);
+                        } else {
+                            alert(data.message);
+                        }
+                        form_key_settings.find('button').text('Add Country');
+                    }
+                });
+        });
+    </script>

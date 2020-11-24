@@ -1,0 +1,19 @@
+<tr id="<?php echo $wo['gender_key'];?>">
+   <td><?php echo $wo['gender_id'];?></td>
+   <td><?php echo $wo['gender_key'];?></td>
+   <td id="edit_<?php echo $wo['gender_key'];?>"><?php echo $wo['gender'];?></td>
+    <td><?php $gender_option = $db->where('ref','gender')->where('lang_key',$wo['gender_key'])->getOne('langs',array('options'));?>
+
+        <div class="form-group">
+            <input onclick="Wo_FreeGenderEnable('<?php echo $wo['gender_key'];?>');" type="radio" id="gender_free_<?php echo $wo['gender_key'];?>_enabled" name="gender_free_<?php echo $wo['gender_key'];?>" value="1" <?php echo ( $gender_option['options'] !== null ) ? 'checked=""' : '';?>>
+            <label for="gender_free_<?php echo $wo['gender_key'];?>_enabled">Enabled</label>
+            <input onclick="Wo_FreeGenderDisable('<?php echo $wo['gender_key'];?>');" type="radio" id="gender_free_<?php echo $wo['gender_key'];?>_disabled" name="gender_free_<?php echo $wo['gender_key'];?>" value="0" <?php echo ( $gender_option['options'] !== null ) ? '' : 'checked=""';?>>
+            <label for="gender_free_<?php echo $wo['gender_key'];?>_disabled" class="m-l-20">Disabled</label>
+        </div>
+
+    </td>
+   <td>
+      <button type="button" class="btn btn-default waves-effect btn-lang m-r-20" data-id="<?php echo $wo['gender_key'];?>" data-toggle="modal" data-target="#defaultModal">EDIT</button>
+      <button onclick="Wo_DeleteGender('<?php echo $wo['gender_key'];?>');" type="button" class="btn btn-danger waves-effect waves-light">DELETE</button>
+   </td>
+</tr>
